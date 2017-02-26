@@ -1,0 +1,385 @@
+// DEFAULT STYLE
+* { 
+    box-sizing: border-box;
+    max-width: 100%;
+    font-family: 'Comfortaa';
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.hidden {display: none;}
+.show {display: initial;} // THIS MIGHT NOT ACTUALLY BE CORRECT
+
+// WRAPPERS
+
+// Wraps around elements with fixed position
+// to put their dimensions back in the flow of the layout
+.fixed-wrapper {overflow-y: auto;}
+.relative-wrapper {position: relative;}
+
+// MARGINS
+$margin-med: 40px;
+$margin-small: 25px;
+$margin-smaller: 10px;
+$margin-smallest: 5px;
+$margin-none: 0px;
+
+.margin-med {margin: $margin-med}
+.margin-small {margin: $margin-small}
+.margin-smaller {margin: $margin-smaller}
+.margin-smallest {margin: $margin-smallest}
+.margin-none {margin: $margin-none}
+
+.margin-bottom-med {margin-bottom: $margin-med;}
+.margin-bottom-small {margin-bottom: $margin-small;}
+.margin-bottom-smaller {margin-bottom: $margin-smaller;}
+.margin-bottom-smallest {margin-bottom: $margin-smallest;}
+.margin-right-med {margin-right: $margin-med;}
+.margin-right-small {margin-right: $margin-small;}
+.margin-right-smaller {margin-right: $margin-smaller;}
+.margin-right-smallest {margin-right: $margin-smallest;}
+.margin-left-med {margin-left: $margin-med;}
+.margin-left-small {margin-left: $margin-small;}
+.margin-left-smaller {margin-left: $margin-smaller;}
+.margin-left-smallest {margin-left: $margin-smallest;}
+.margin-top-med {margin-top: $margin-med;}
+.margin-top-small {margin-top: $margin-small;}
+.margin-top-smaller {margin-top: $margin-smaller;}
+.margin-top-smallest {margin-top: $margin-smallest;}
+
+// PADDING 
+$padding-med: 40px;
+$padding-small: 25px;
+$padding-smaller: 10px;
+$padding-smallest: 5px;
+$padding-none: 0px;
+
+.padding-med {padding: $padding-med}
+.padding-small {padding: $padding-small}
+.padding-smaller {padding: $padding-smaller}
+.padding-smallest {padding: $padding-smallest}
+.padding-none {padding: $padding-none}
+
+.padding-bottom-med {padding-bottom: $padding-med;}
+.padding-bottom-small {padding-bottom: $padding-small;}
+.padding-bottom-smaller {padding-bottom: $padding-smaller;}
+.padding-bottom-smallest {padding-bottom: $padding-smallest;}
+.padding-right-med {padding-right: $padding-med;}
+.padding-right-small {padding-right: $padding-small;}
+.padding-right-smaller {padding-right: $padding-smaller;}
+.padding-right-smallest {padding-right: $padding-smallest;}
+.padding-left-med {padding-left: $padding-med}
+.padding-left-small {padding-left: $padding-small;}
+.padding-left-smaller {padding-left: $padding-smaller;}
+.padding-left-smallest {padding-left: $padding-smallest;}
+.padding-top-med {padding-top: $padding-med;}
+.padding-top-small {padding-top: $padding-small;}
+.padding-top-smaller {padding-top: $padding-smaller;}
+.padding-top-smallest {padding-top: $padding-smallest;}
+
+// COLORS
+$primary: rgb(29, 202, 255);
+$primary-dark:rgb(0, 132, 180);
+$primary-hover: $primary-dark;
+
+$secondary: rgb(255, 150, 50);
+$secondary-dark: rgb(255, 125, 0);
+$secondary-hover: $secondary-dark;
+
+$ternary: rgb(255, 255, 255);
+$ternary-dark: rgb(250, 250, 250);
+$ternary-hover: $ternary-dark;
+
+$warning: rgb(255, 50, 50);
+
+// FONT SIZE
+$xxlarge: 2em;
+$xlarge: 1.75em;
+$large: 1.5em;
+
+// BORDER RADIUS SIZE
+$radius-small: 10px;
+$radius-smaller: 5px;
+$radius-smallest: 2px;
+
+// ANIMATIONS
+
+@keyframes fade-in {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fade-out {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+@keyframes slide-up-20 {
+    from {transform: translateY(20px)}
+    to {transform: translateY(0px)}
+}
+@keyframes slide-down-20 {
+    from {transform: translateY(-20px)}
+    to {transform: translateY(0px)}
+}
+
+// NOTE: Only work with non-static position elements
+@keyframes slide-in-from-top {
+    from {transform: translateY(-100%)}
+    to {transform: translateY(0%)}
+}
+
+@keyframes slide-out-from-bottom {
+    from {transform: translateY(0%)}
+    to {transform: translateY(-100%)}
+}
+
+@keyframes hide {
+    from {display: initial}
+    to {display: none}
+}
+
+.fade-in-slow {animation: fade-in 4s;}
+.fade-in-med {animation: fade-in 2s}
+.fade-in-fast {animation: fade-in 1s}
+.fade-in-faster {animation: fade-in 0.5s}
+
+.slide-up-slow {animation: slide-up-20 4s;}
+.slide-up-med {animation: slide-up-20 3s;}
+.slide-up-fast {animation: slide-up-20 2s;}
+.slide-up-faster {animation: slide-up-20 1s;}
+
+.slide-down-slow {animation: slide-down-20 4s;}
+.slide-down-med {animation: slide-down-20 3s;}
+.slide-down-fast {animation: slide-down-20 2s;}
+.slide-down-faster {animation: slide-down-20 1s;}
+
+.slide-in-from-top {animation: slide-in-from-top 0.5s;}
+.slide-out-from-bottom {animation: slide-out-from-bottom 0.5s}
+
+.fade-in-slide-up-slow {animation: fade-in 4s, slide-up-20 4s}
+.fade-in-slide-up-med {animation: fade-in 2s, slide-up-20 3s}
+.fade-in-slide-up-fast {animation: fade-in 1s, slide-up-20 2s}
+.fade-in-slide-up-faster {animation: fade-in 0.5s, slide-up-20 1s}
+
+.fade-in-slide-down-slow {animation: fade-in 4s, slide-down-20 4s}
+.fade-in-slide-down-med {animation: fade-in 2s, slide-down-20 3s}
+.fade-in-slide-down-fast {animation: fade-in 1s, slide-down-20 2s}
+.fade-in-slide-down-faster {animation: fade-in 0.5s, slide-down-20 1s}
+
+.handle {
+    font-weight: bold;
+    margin: $margin-none;
+}
+
+.tweet-display {margin-bottom: $margin-small;}
+.header {margin-bottom: $margin-small;}
+.username {margin: $margin-none;}
+.tweet {margin: $margin-none;}
+
+.nav-bar {
+    background-color: $primary;
+    padding: 0px;
+    margin: 0px 0px $margin-small 0px;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    z-index: 2;
+    ul { margin: 0px 0px $margin-smaller 0px;}
+
+    a {
+        color: $ternary;
+        text-decoration: none;
+    }
+}
+
+.nav-item {
+    list-style-type: none;
+    padding: 10px 20px;
+    margin: 0px;
+    left: 0px;
+    position: relative;
+    float: left;
+    background-color: $primary;
+    color: $ternary;
+    font-size: $large;
+    font-weight: bolder;
+    &:hover {background-color: $primary-hover;}
+}
+
+.hamburger-menu-bar {
+    @extend .nav-bar;
+    font-size: $xxlarge;
+    font-weight: bolder;
+    border: 1px solid $primary;
+}
+
+.hamburger-menu {
+    @extend .hamburger-menu-bar;
+    position: absolute;
+    z-index: 1;
+    margin-top: -$margin-small; // Ensures the menu appears directly below the menu bar
+    ul {list-style-type: none; padding: 0px;}
+    color: $primary;
+    background-color: $ternary-dark;
+}
+
+.hamburger-menu-item {
+    color: $primary;
+    background-color: $ternary-dark;
+    padding: $padding-small;
+    &:hover {background-color: $primary-hover; color: $ternary;}
+}
+
+.avatar {margin-right: $margin-smaller}
+.center-text {text-align: center;}
+
+.input-field {
+    padding: $padding-smallest;
+    border-radius: $radius-smaller;
+    border-color: lightgray;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: $margin-smaller;
+    transition: box-shadow 0.25s;
+
+    &.error {
+        border: 3px solid $warning;
+        color: $warning;
+    }
+
+    &:hover {
+        box-shadow: 0px 0px 10px $primary;
+    }
+}
+
+.no-bullets {li {list-style-type: none;}}
+
+
+// BUTTONS
+
+.button-primary {
+    background-color: $primary;
+    color: $ternary;
+    font-weight: bolder;
+    border: none;
+    border-radius: $radius-small;
+    padding: $padding-smaller $padding-med;
+    font-size: $large;
+
+    &:hover {
+        background-color: $primary-hover;
+    }
+}
+.button-secondary {
+    background-color: $secondary;
+    color: $ternary;
+    font-weight: bolder;
+    border: none;
+    border-radius: $radius-small;
+    padding: $padding-smaller $padding-med;
+    font-size: $large;
+
+    &:hover {
+        background-color: $secondary-hover;
+    }
+}
+.button-ternary {
+    background-color: $ternary;
+    color: $primary;
+    font-weight: bolder;
+    border: none;
+    border-radius: $radius-small;
+    padding: $padding-smaller $padding-med;
+    font-size: $large;
+
+    &:hover {
+        background-color: $ternary-hover;
+    }
+}
+.button-primary-small {
+    @extend .button-primary;
+    font-size: 1.0em;
+    padding: $padding-smallest $padding-small
+
+}
+.button-secondary-small {
+    @extend .button-secondary;
+    font-size: 1.0em;
+    padding: $padding-smallest $padding-small
+
+}
+.button-ternary-small {
+    @extend .button-ternary;
+    font-size: 1.0em;
+    padding: $padding-smallest $padding-small
+}
+
+.button-primary-smaller {
+    @extend .button-primary;
+    font-size: 0.8em;
+    padding: $padding-smallest $padding-small
+
+}
+.button-secondary-smaller {
+    @extend .button-secondary;
+    font-size: 0.8em;
+    padding: $padding-smallest $padding-small
+
+}
+.button-ternary-smaller {
+    @extend .button-ternary;
+    font-size: 0.8em;
+    padding: $padding-smallest $padding-small
+}
+
+// TEXT
+.text-error {
+    color: red;
+}
+
+
+// CUSTOM LAYOUT
+
+// SIGN IN BOX
+.sign-in-box {
+    height: 250px;
+    background-color: $primary;
+    color: $ternary;
+    box-shadow: 0px 10px 15px 0px lightgray;
+    margin: $margin-med $margin-small;
+
+    input {
+        color: black;
+        position: relative;
+        top: 40%;
+    }
+
+    button {
+        position: relative;
+        top: 50%;
+    }
+}
+
+// REACT TRANSITIONS
+
+.slide-from-top-enter 
+{transform: translateY(-100%);}
+.slide-from-top-enter.slide-from-top-enter-active 
+{transform: translateY(0%); transition: 500ms;}
+.slide-from-top-leave 
+{transform: translateY(0%);}
+.slide-from-top-leave.slide-from-top-leave-active 
+{transform: translateY(-100%); transition: 500ms;}
+
+.fade-enter 
+{opacity: 0;}
+.fade-enter.fade-enter-active 
+{opacity: 1; transition: 250ms;}
+.fade-leave 
+{opacity: 1;}
+.fade-leave.fade-leave-active 
+{opacity: 0; transition: 250ms;}
