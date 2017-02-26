@@ -323,9 +323,6 @@
 .avatar {
   margin-right: 10px; }
 
-.center-text {
-  text-align: center; }
-
 .input-field {
   padding: 5px;
   border-radius: 5px;
@@ -399,6 +396,18 @@
 .button-ternary-smaller {
   font-size: 0.8em;
   padding: 5px 25px; }
+
+.text-center {
+  text-align: center; }
+
+.text-large {
+  font-size: 1.5em; }
+
+.text-xlarge {
+  font-size: 1.75em; }
+
+.text-xxlarge {
+  font-size: 2em; }
 
 .text-error {
   color: red; }

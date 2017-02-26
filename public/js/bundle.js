@@ -15814,9 +15814,9 @@ var _store = __webpack_require__(16);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _TweetDisplay = __webpack_require__(50);
+var _TweetList = __webpack_require__(330);
 
-var _TweetDisplay2 = _interopRequireDefault(_TweetDisplay);
+var _TweetList2 = _interopRequireDefault(_TweetList);
 
 var _NavigationBar = __webpack_require__(87);
 
@@ -15904,7 +15904,7 @@ var HomePage = function (_React$Component) {
           { className: 'row' },
           _react2.default.createElement(
             'div',
-            { className: 'col-sm-5 col-xs-12 center-text' },
+            { className: 'col-sm-5 col-xs-12 text-center' },
             this.props.loggedInUser && _react2.default.createElement(
               'div',
               null,
@@ -15927,21 +15927,9 @@ var HomePage = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { className: 'col-sm-4 col-xs-12' },
-            _react2.default.createElement(
-              'h1',
-              null,
-              'Latest Tweets'
-            ),
-            _react2.default.createElement('br', null),
-            this.props.currentTweets && this.props.currentTweets.map(function (tweet) {
-              return _react2.default.createElement(_TweetDisplay2.default, {
-                handle: tweet.user.handle,
-                content: tweet.content,
-                name: tweet.user.fullname,
-                id: tweet.id,
-                animate: tweet.animate,
-                key: tweet.id
-              });
+            _react2.default.createElement(_TweetList2.default, {
+              tweets: this.props.currentTweets,
+              header: "Latest Tweets"
             })
           ),
           _react2.default.createElement(
@@ -16160,9 +16148,9 @@ var _axios = __webpack_require__(10);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _RelatedTweetsPage = __webpack_require__(173);
+var _TweetList = __webpack_require__(330);
 
-var _RelatedTweetsPage2 = _interopRequireDefault(_RelatedTweetsPage);
+var _TweetList2 = _interopRequireDefault(_TweetList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16189,6 +16177,16 @@ var RelatedTweetsPageContainer = function (_React$Component) {
   _createClass(RelatedTweetsPageContainer, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      this.updateTweets();
+    }
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate() {
+      this.updateTweets();
+    }
+  }, {
+    key: 'updateTweets',
+    value: function updateTweets() {
       var _this2 = this;
 
       _axios2.default.get('/api/tweets/related/' + this.props.params.hashTag).then(function (res) {
@@ -16200,9 +16198,33 @@ var RelatedTweetsPageContainer = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(_RelatedTweetsPage2.default, {
-        tweets: this.state.tweets,
-        hashTag: this.props.params.hashTag });
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'div',
+          {
+            className: 'hidden-xs',
+            style: {
+              position: 'absolute',
+              top: '35%',
+              right: '80%',
+              transform: 'translateX(50%)' } },
+          _react2.default.createElement(
+            'h1',
+            { style: { fontSize: '4.25em' } },
+            '#' + this.props.params.hashTag
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'col-sm-offset-5 col-sm-4 col-xs-12' },
+          _react2.default.createElement(_TweetList2.default, {
+            tweets: this.state.tweets,
+            header: '#' + this.props.params.hashTag
+          })
+        )
+      );
     }
   }]);
 
@@ -17301,52 +17323,7 @@ var HamburgerMenu = function (_React$Component) {
 exports.default = HamburgerMenu;
 
 /***/ }),
-/* 173 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(4);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _TweetDisplay = __webpack_require__(50);
-
-var _TweetDisplay2 = _interopRequireDefault(_TweetDisplay);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var RelatedTweetsPage = function RelatedTweetsPage(props) {
-
-  return _react2.default.createElement(
-    'div',
-    { className: 'col-xs-12' },
-    _react2.default.createElement(
-      'h1',
-      null,
-      '#' + props.hashTag
-    ),
-    _react2.default.createElement('br', null),
-    props.tweets && props.tweets.map(function (tweet) {
-      return _react2.default.createElement(_TweetDisplay2.default, {
-        handle: tweet.user.handle,
-        content: tweet.content,
-        name: tweet.user.name,
-        id: tweet.id,
-        key: tweet.id
-      });
-    })
-  );
-};
-
-exports.default = RelatedTweetsPage;
-
-/***/ }),
+/* 173 */,
 /* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -33874,6 +33851,52 @@ _reactDom2.default.render(_react2.default.createElement(
         _react2.default.createElement(_reactRouter.Route, { path: '/tweets/related/:hashTag', component: _RelatedTweetsPageContainer2.default })
     )
 ), document.getElementById('app'));
+
+/***/ }),
+/* 330 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _TweetDisplay = __webpack_require__(50);
+
+var _TweetDisplay2 = _interopRequireDefault(_TweetDisplay);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TweetList = function TweetList(props) {
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'h1',
+      null,
+      props.header
+    ),
+    _react2.default.createElement('br', null),
+    props.tweets && props.tweets.map(function (tweet) {
+      return _react2.default.createElement(_TweetDisplay2.default, {
+        handle: tweet.user.handle,
+        content: tweet.content,
+        name: tweet.user.fullname,
+        id: tweet.id,
+        animate: tweet.animate,
+        key: tweet.id
+      });
+    })
+  );
+};
+
+exports.default = TweetList;
 
 /***/ })
 /******/ ]);

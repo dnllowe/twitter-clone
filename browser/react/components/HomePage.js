@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Link} from 'react-router';
 
 import store from '../../redux/store';
-import TweetDisplay from './TweetDisplay';
+import TweetList from './TweetList';
 import NavigationBar from './NavigationBar';
 import Intro from './Intro';
 import TweetField from './Tweetfield';
@@ -50,7 +50,7 @@ class HomePage extends React.Component {
       <div>
         <div className='row'>
           
-          <div className='col-sm-5 col-xs-12 center-text'>
+          <div className='col-sm-5 col-xs-12 text-center'>
             
             {/* SIGNED IN */}
             {this.props.loggedInUser && 
@@ -80,20 +80,10 @@ class HomePage extends React.Component {
           </div>
           
           <div className='col-sm-4 col-xs-12'>
-            <h1>Latest Tweets</h1>
-            <br/>
-            {this.props.currentTweets && this.props.currentTweets.map(tweet => {
-              return (                 
-                <TweetDisplay 
-                    handle={tweet.user.handle} 
-                    content={tweet.content} 
-                    name={tweet.user.fullname}
-                    id={tweet.id}
-                    animate={tweet.animate}
-                    key={tweet.id}
-                />
-              );
-            })}
+            <TweetList
+              tweets={this.props.currentTweets}
+              header={"Latest Tweets"}
+            />
           </div>
 
           <div className='col-sm-3 hidden-xs'>

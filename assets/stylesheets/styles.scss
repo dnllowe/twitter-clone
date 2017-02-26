@@ -235,7 +235,6 @@ $radius-smallest: 2px;
 }
 
 .avatar {margin-right: $margin-smaller}
-.center-text {text-align: center;}
 
 .input-field {
     padding: $padding-smallest;
@@ -337,6 +336,11 @@ $radius-smallest: 2px;
 }
 
 // TEXT
+.text-center {text-align: center;}
+.text-large {font-size: $large;}
+.text-xlarge {font-size: $xlarge;}
+.text-xxlarge {font-size: $xxlarge;}
+
 .text-error {
     color: red;
 }

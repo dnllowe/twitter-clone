@@ -2,7 +2,7 @@
 import React from 'react'
 import axios from 'axios';
 
-import RelatedTweetsPage from '../components/RelatedTweetsPage';
+import TweetList from '../components/TweetList';
 
 class RelatedTweetsPageContainer extends React.Component {
 
@@ -14,6 +14,14 @@ class RelatedTweetsPageContainer extends React.Component {
   }
 
   componentDidMount() {
+    this.updateTweets();
+  }
+
+  componentWillUpdate() {
+    this.updateTweets();
+  }
+
+  updateTweets() {
     axios.get(`/api/tweets/related/${this.props.params.hashTag}`)
     .then(res => res.data)
     .then(tweets => this.setState({tweets}))
@@ -22,9 +30,23 @@ class RelatedTweetsPageContainer extends React.Component {
 
   render() {
     return (
-      <RelatedTweetsPage 
-        tweets={this.state.tweets}
-        hashTag={this.props.params.hashTag}/>
+      <div>
+        <div 
+        className='hidden-xs'
+        style={ {
+          position: 'absolute', 
+          top: '35%', 
+          right: '80%', 
+          transform: 'translateX(50%)'} }>
+          <h1 style={ {fontSize: '4.25em'} }>{`#${this.props.params.hashTag}`}</h1>
+        </div>
+        <div className='col-sm-offset-5 col-sm-4 col-xs-12'>
+          <TweetList 
+            tweets={this.state.tweets}
+            header={`#${this.props.params.hashTag}`}
+          />
+        </div>
+      </div>
     );
   }
 }
