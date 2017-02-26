@@ -13,8 +13,8 @@ const NavigationBar = (props) => {
   if(props.links) {
     links = props.links.map((link, index) =>{
       return (
-        <Link to='/' key={index}>
-          <li className='nav-item'>{link}</li>
+        <Link to={link.url} key={index}>
+          <li className='nav-item'>{link.text}</li>
         </Link>
         
       );
@@ -22,31 +22,9 @@ const NavigationBar = (props) => {
   }
 
   return (
-    <div className='fixed-wrapper'>
-      <div className='nav-bar'>
-        <ul>
-          {links}
-        </ul>
-        <Transition
-          transitionName='fade'
-          transitionEnterTimeout={250}
-          transitionLeaveTimeout={250}
-        >
-          {props.loggedIn && 
-            <button className={
-              `button-ternary-small 
-              col-lg-offset-6 
-              col-md-offset-4 
-              col-sm-offset-3
-              hidden-xs`}
-              onClick={() => store.dispatch(logout())}
-            >
-              Logout {props.name}
-            </button>
-          }
-        </Transition>
-      </div>
-    </div>
+    <ul>
+      {links}
+    </ul>
   );
 }
 

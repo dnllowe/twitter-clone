@@ -8,7 +8,12 @@ export default {
     currentHashtags: []
   },
   ui: {
-    navigationLinks: ['Home', 'Tweets', 'Users', 'FAQ'],
+    navigationLinks: [
+      {text: 'Home', url: '/', callbacks: []}, 
+      {text: 'Tweets', url: '/', callbacks: []}, 
+      {text: 'Users', url: '/', callbacks: []}, 
+      {text: 'FAQ', url: '/', callbacks: []}
+    ],
     prompt: 'What\'s on your mind?',
     isSignupDisplaying: false
   },

@@ -3578,7 +3578,7 @@ exports.default = {
     currentHashtags: []
   },
   ui: {
-    navigationLinks: ['Home', 'Tweets', 'Users', 'FAQ'],
+    navigationLinks: [{ text: 'Home', url: '/', callbacks: [] }, { text: 'Tweets', url: '/', callbacks: [] }, { text: 'Users', url: '/', callbacks: [] }, { text: 'FAQ', url: '/', callbacks: [] }],
     prompt: 'What\'s on your mind?',
     isSignupDisplaying: false
   },
@@ -9429,46 +9429,20 @@ var NavigationBar = function NavigationBar(props) {
     links = props.links.map(function (link, index) {
       return _react2.default.createElement(
         _reactRouter.Link,
-        { to: '/', key: index },
+        { to: link.url, key: index },
         _react2.default.createElement(
           'li',
           { className: 'nav-item' },
-          link
+          link.text
         )
       );
     });
   }
 
   return _react2.default.createElement(
-    'div',
-    { className: 'fixed-wrapper' },
-    _react2.default.createElement(
-      'div',
-      { className: 'nav-bar' },
-      _react2.default.createElement(
-        'ul',
-        null,
-        links
-      ),
-      _react2.default.createElement(
-        _reactAddonsCssTransitionGroup2.default,
-        {
-          transitionName: 'fade',
-          transitionEnterTimeout: 250,
-          transitionLeaveTimeout: 250
-        },
-        props.loggedIn && _react2.default.createElement(
-          'button',
-          { className: 'button-ternary-small \n              col-lg-offset-6 \n              col-md-offset-4 \n              col-sm-offset-3\n              hidden-xs',
-            onClick: function onClick() {
-              return _store2.default.dispatch((0, _logoutUser2.default)());
-            }
-          },
-          'Logout ',
-          props.name
-        )
-      )
-    )
+    'ul',
+    null,
+    links
   );
 };
 
@@ -15874,9 +15848,6 @@ var HomePage = function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
 
-      _store2.default.dispatch((0, _loadTweets2.default)('/api/tweets/latest/0/5'));
-      _store2.default.dispatch((0, _loadHashtags2.default)('/api/tweets/hashtags/popular/0/10'));
-
       // Check for new tweets and hashtags every 5 seconds
       this.syncId = setInterval(function () {
         _store2.default.dispatch((0, _loadTweets2.default)('/api/tweets/latest/0/5'));
@@ -15988,9 +15959,9 @@ var _axios = __webpack_require__(10);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _store = __webpack_require__(16);
+var _reactAddonsCssTransitionGroup = __webpack_require__(103);
 
-var _store2 = _interopRequireDefault(_store);
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
 var _TweetDisplay = __webpack_require__(50);
 
@@ -16000,9 +15971,13 @@ var _NavigationBar = __webpack_require__(87);
 
 var _NavigationBar2 = _interopRequireDefault(_NavigationBar);
 
-var _HamburgerMenu = __webpack_require__(172);
+var _NavigationBarContainer = __webpack_require__(333);
 
-var _HamburgerMenu2 = _interopRequireDefault(_HamburgerMenu);
+var _NavigationBarContainer2 = _interopRequireDefault(_NavigationBarContainer);
+
+var _HamburgerMenuContainer = __webpack_require__(331);
+
+var _HamburgerMenuContainer2 = _interopRequireDefault(_HamburgerMenuContainer);
 
 var _Intro = __webpack_require__(86);
 
@@ -16012,15 +15987,33 @@ var _checkLoggedInUser = __webpack_require__(180);
 
 var _checkLoggedInUser2 = _interopRequireDefault(_checkLoggedInUser);
 
+var _store = __webpack_require__(16);
+
+var _store2 = _interopRequireDefault(_store);
+
 var _initialState = __webpack_require__(29);
 
 var _initialState2 = _interopRequireDefault(_initialState);
+
+var _logoutUser = __webpack_require__(92);
+
+var _logoutUser2 = _interopRequireDefault(_logoutUser);
+
+var _loadTweets = __webpack_require__(90);
+
+var _loadTweets2 = _interopRequireDefault(_loadTweets);
+
+var _loadHashtags = __webpack_require__(182);
+
+var _loadHashtags2 = _interopRequireDefault(_loadHashtags);
 
 var _layoutUtility = __webpack_require__(189);
 
 var _layoutUtility2 = _interopRequireDefault(_layoutUtility);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -16032,7 +16025,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // COMPONENTS
 
 
-// USING REQUIRE TO GET MORE USEFUL LINTING
+// REDUX
 
 
 // CUSTOM MODULES
@@ -16047,7 +16040,6 @@ var AppContainer = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (AppContainer.__proto__ || Object.getPrototypeOf(AppContainer)).call(this));
 
     _this.state = _store2.default.getState();
-    _this.layout = new _layoutUtility2.default();
     return _this;
   }
 
@@ -16059,6 +16051,9 @@ var AppContainer = function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      _store2.default.dispatch((0, _loadTweets2.default)('/api/tweets/latest/0/5'));
+      _store2.default.dispatch((0, _loadHashtags2.default)('/api/tweets/hashtags/popular/0/10'));
+
       // Update state every time redux store changes state
       this.unsubscribe = _store2.default.subscribe(function () {
         _this2.setState(_store2.default.getState());
@@ -16068,15 +16063,15 @@ var AppContainer = function (_React$Component) {
       _store2.default.dispatch((0, _checkLoggedInUser2.default)());
 
       // Resize any fixed position elements with wrappers
-      this.layout.resizeFixedWrappers();
+      _layoutUtility2.default.resizeFixedWrappers();
       // Call again after a small delay to make sure HTML assets have rendered
-      setTimeout(this.layout.resizeFixedWrappers, 10);
-      this.layout.addResizeFixedWrappersListener();
+      setTimeout(_layoutUtility2.default.resizeFixedWrappers, 10);
+      _layoutUtility2.default.addResizeFixedWrappersListener();
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      this.layout.removeResizeFixedWrappersListener();
+      _layoutUtility2.default.removeResizeFixedWrappersListener();
       this.unsubscribe();
     }
   }, {
@@ -16087,6 +16082,13 @@ var AppContainer = function (_React$Component) {
       var user = this.state.user.loggedInUser;
       var loggedIn = user !== null ? true : false;
       var name = loggedIn ? user.firstname : null;
+      var hamburgerMenuLinks = [].concat(_toConsumableArray(this.state.ui.navigationLinks));
+      if (loggedIn) {
+        hamburgerMenuLinks.push({ text: 'Logout', url: '#', callbacks: [function () {
+            _store2.default.dispatch((0, _logoutUser2.default)());
+          }] } // Provide function that *calls* logout to avoid immediately invoking it
+        );
+      }
 
       return _react2.default.createElement(
         'div',
@@ -16094,7 +16096,7 @@ var AppContainer = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'hidden-xs' },
-          _react2.default.createElement(_NavigationBar2.default, {
+          _react2.default.createElement(_NavigationBarContainer2.default, {
             links: this.state.ui.navigationLinks,
             loggedIn: loggedIn,
             name: name
@@ -16103,11 +16105,7 @@ var AppContainer = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'hidden-sm hidden-md hidden-lg' },
-          _react2.default.createElement(_HamburgerMenu2.default, {
-            links: this.state.ui.navigationLinks,
-            loggedIn: loggedIn,
-            name: name
-          })
+          _react2.default.createElement(_HamburgerMenuContainer2.default, { links: hamburgerMenuLinks })
         ),
         this.props.children && (0, _react.cloneElement)(this.props.children, {
           currentTweets: this.state.tweets.currentTweets,
@@ -17176,8 +17174,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
@@ -17198,127 +17194,53 @@ var _logoutUser2 = _interopRequireDefault(_logoutUser);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var HamburgerMenu = function HamburgerMenu(props) {
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  // STORE LINKS IN ARRAY FOR USE LATER
+  var links = props.links.map(function (link, index) {
+    return _react2.default.createElement(
+      _reactRouter.Link,
+      { to: link.url, key: index },
+      _react2.default.createElement(
+        'li',
+        {
+          className: 'hamburger-menu-item',
+          onClick: function onClick() {
+            link.callbacks.forEach(function (callback) {
+              return callback();
+            });
+          } },
+        link.text
+      )
+    );
+  });
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var HamburgerMenu = function (_React$Component) {
-  _inherits(HamburgerMenu, _React$Component);
-
-  function HamburgerMenu() {
-    _classCallCheck(this, HamburgerMenu);
-
-    var _this = _possibleConstructorReturn(this, (HamburgerMenu.__proto__ || Object.getPrototypeOf(HamburgerMenu)).call(this));
-
-    _this.state = {
-      showMenu: false,
-      menuIcon: '\u2630'
-    };
-    _this.toggleMenu = _this.toggleMenu.bind(_this);
-    return _this;
-  }
-
-  _createClass(HamburgerMenu, [{
-    key: 'toggleMenu',
-    value: function toggleMenu() {
-      if (this.state.showMenu) {
-        this.setState({
-          showMenu: false,
-          menuIcon: '\u2630' // This is the 3 bar glyph code
-        });
-      } else {
-        this.setState({
-          showMenu: true,
-          menuIcon: '[ x ]'
-        });
-      }
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      // STORE LINKS IN ARRAY FOR USE LATER
-      var links = [];
-
-      if (this.props.links) {
-        links = this.props.links.map(function (link, index) {
-          return _react2.default.createElement(
-            _reactRouter.Link,
-            { to: '/', key: index },
-            _react2.default.createElement(
-              'li',
-              { className: 'hamburger-menu-item' },
-              link
-            )
-          );
-        });
-      }
-
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'div',
+      { className: 'relative-wrapper' },
+      _react2.default.createElement(
+        _reactAddonsCssTransitionGroup2.default,
+        {
+          transitionName: 'slide-from-top',
+          transitionEnterTimeout: 500,
+          transitionLeaveTimeout: 500
+        },
+        props.showMenu && _react2.default.createElement(
           'div',
-          { className: 'fixed-wrapper' },
+          { className: 'hamburger-menu' },
           _react2.default.createElement(
-            'div',
-            { className: 'hamburger-menu-bar' },
-            _react2.default.createElement(
-              'span',
-              { onClick: this.toggleMenu },
-              _react2.default.createElement(
-                'a',
-                { href: '#' },
-                '\xA0\xA0\xA0',
-                this.state.menuIcon
-              )
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'relative-wrapper' },
-          _react2.default.createElement(
-            _reactAddonsCssTransitionGroup2.default,
-            {
-              transitionName: 'slide-from-top',
-              transitionEnterTimeout: 500,
-              transitionLeaveTimeout: 500
-            },
-            this.state.showMenu && _react2.default.createElement(
-              'div',
-              { className: 'hamburger-menu' },
-              _react2.default.createElement(
-                'ul',
-                null,
-                links,
-                this.props.loggedIn && _react2.default.createElement(
-                  'a',
-                  { href: '#' },
-                  _react2.default.createElement(
-                    'li',
-                    {
-                      className: 'hamburger-menu-item',
-                      onClick: function onClick() {
-                        _this2.toggleMenu();_store2.default.dispatch((0, _logoutUser2.default)());
-                      }
-                    },
-                    'Logout'
-                  )
-                )
-              )
-            )
+            'ul',
+            null,
+            links
           )
         )
-      );
-    }
-  }]);
-
-  return HamburgerMenu;
-}(_react2.default.Component);
+      )
+    )
+  );
+};
 
 exports.default = HamburgerMenu;
 
@@ -18536,8 +18458,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var LayoutUtility = function () {
   function LayoutUtility() {
     _classCallCheck(this, LayoutUtility);
-  }
 
+    this.resizeFixedWrappers = this.resizeFixedWrappers.bind(this);
+    this.addResizeFixedWrappersListener = this.addResizeFixedWrappersListener.bind(this);
+    this.removeResizeFixedWrappersListener = this.removeResizeFixedWrappersListener.bind(this);
+  }
   /**
    * Checks for any nodes that are wrapped around
    * elements with fixed position and resizes
@@ -18582,7 +18507,7 @@ var LayoutUtility = function () {
   return LayoutUtility;
 }();
 
-exports.default = LayoutUtility;
+exports.default = new LayoutUtility();
 
 /***/ }),
 /* 190 */
@@ -33897,6 +33822,300 @@ var TweetList = function TweetList(props) {
 };
 
 exports.default = TweetList;
+
+/***/ }),
+/* 331 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(24);
+
+var _HamburgerMenu = __webpack_require__(172);
+
+var _HamburgerMenu2 = _interopRequireDefault(_HamburgerMenu);
+
+var _NavApi = __webpack_require__(332);
+
+var _NavApi2 = _interopRequireDefault(_NavApi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var HamburgerMenuContainer = function (_React$Component) {
+  _inherits(HamburgerMenuContainer, _React$Component);
+
+  function HamburgerMenuContainer(props) {
+    _classCallCheck(this, HamburgerMenuContainer);
+
+    var _this = _possibleConstructorReturn(this, (HamburgerMenuContainer.__proto__ || Object.getPrototypeOf(HamburgerMenuContainer)).call(this));
+
+    _this.state = {
+      links: props.links,
+      showMenu: false,
+      menuIcon: '\u2630'
+    };
+    _this.toggleMenu = _this.toggleMenu.bind(_this);
+    return _this;
+  }
+
+  _createClass(HamburgerMenuContainer, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.updateLinks(this.state.links, this.toggleMenu);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+
+      // Compare text of links to determine if any changed
+
+      var currentLinks = this.state.links.map(function (link) {
+        return link.text;
+      });
+
+      var nextLinks = nextProps.links.map(function (link) {
+        return link.text;
+      });
+
+      // Convert to string to allow for shallow comparison of arrays
+      if (currentLinks.join(' ') !== nextLinks.join(' ')) {
+        this.updateLinks(nextProps.links, this.toggleMenu);
+      }
+    }
+
+    /**
+     * Updates current links with new callbacks. Updtes state with new links
+     * @param {Object[]} links An array of link objects (with properties text, url, and callbacks)
+     * @param {Function|Function[]} callbacks A callback function or array of callback functions
+     */
+
+  }, {
+    key: 'updateLinks',
+    value: function updateLinks(links, callbacks) {
+      var linksWithCallbacks = _NavApi2.default.addCallbacksToLinks(links, callbacks);
+      this.setState({ links: linksWithCallbacks });
+    }
+
+    /**
+     * Sets display state of dropdown menu to on/off
+     */
+
+  }, {
+    key: 'toggleMenu',
+    value: function toggleMenu() {
+      if (this.state.showMenu) {
+        this.setState({
+          showMenu: false,
+          menuIcon: '\u2630' // This is the 3 bar glyph code
+        });
+      } else {
+        this.setState({
+          showMenu: true,
+          menuIcon: '[ x ]'
+        });
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+
+      if (this.props.loggedIn) {}
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'div',
+          { className: 'fixed-wrapper' },
+          _react2.default.createElement(
+            'div',
+            { className: 'hamburger-menu-bar' },
+            _react2.default.createElement(
+              'span',
+              { onClick: this.toggleMenu },
+              _react2.default.createElement(
+                'a',
+                { href: '#' },
+                '\xA0\xA0\xA0',
+                this.state.menuIcon
+              )
+            )
+          )
+        ),
+        _react2.default.createElement(_HamburgerMenu2.default, {
+          links: this.state.links,
+          showMenu: this.state.showMenu
+        })
+      );
+    }
+  }]);
+
+  return HamburgerMenuContainer;
+}(_react2.default.Component);
+
+exports.default = HamburgerMenuContainer;
+
+/***/ }),
+/* 332 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NavApi = function () {
+  function NavApi() {
+    _classCallCheck(this, NavApi);
+  }
+
+  _createClass(NavApi, [{
+    key: 'addCallbacksToLinks',
+
+
+    /**
+     * Adds the given callbacks to an array of link objects
+     * @param {Object[]} links An array of link objects (containing text, url, and callbacks properties)
+     * @param {function|function[]} callbacks A callback function or an array of callback functions
+     * @returns {Object[]} returns new links with array given callbacks as callbacks property
+     */
+    value: function addCallbacksToLinks(links, callbacks) {
+      var linksWithCallbacks = links.map(function (link) {
+        var linkWithCallbacks = Object.assign({}, link);
+
+        if (typeof callbacks === 'function') {
+          linkWithCallbacks.callbacks = [].concat(_toConsumableArray(link.callbacks), [callbacks]);
+        } else if (Array.isArray(callbacks)) {
+          linkWithCallbacks.callbacks = [].concat(_toConsumableArray(link.callbacks), _toConsumableArray(callbacks));
+        } else {
+          throw new Error('addCallbacksToLinks second paramater must be function or array of functions');
+        }
+
+        return linkWithCallbacks;
+      });
+
+      return linksWithCallbacks;
+    }
+  }]);
+
+  return NavApi;
+}();
+
+exports.default = new NavApi();
+
+/***/ }),
+/* 333 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactAddonsCssTransitionGroup = __webpack_require__(103);
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
+var _store = __webpack_require__(16);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _logoutUser = __webpack_require__(92);
+
+var _logoutUser2 = _interopRequireDefault(_logoutUser);
+
+var _NavigationBar = __webpack_require__(87);
+
+var _NavigationBar2 = _interopRequireDefault(_NavigationBar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NavigationBarContainer = function (_React$Component) {
+  _inherits(NavigationBarContainer, _React$Component);
+
+  function NavigationBarContainer() {
+    _classCallCheck(this, NavigationBarContainer);
+
+    return _possibleConstructorReturn(this, (NavigationBarContainer.__proto__ || Object.getPrototypeOf(NavigationBarContainer)).apply(this, arguments));
+  }
+
+  _createClass(NavigationBarContainer, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'fixed-wrapper' },
+        _react2.default.createElement(
+          'div',
+          { className: 'nav-bar' },
+          _react2.default.createElement(_NavigationBar2.default, {
+            links: this.props.links
+          }),
+          _react2.default.createElement(
+            _reactAddonsCssTransitionGroup2.default,
+            {
+              transitionName: 'fade',
+              transitionEnterTimeout: 250,
+              transitionLeaveTimeout: 250
+            },
+            this.props.loggedIn && _react2.default.createElement(
+              'button',
+              { className: 'button-ternary-small \n              col-lg-offset-6 \n              col-md-offset-4 \n              col-sm-offset-3\n              hidden-xs',
+                onClick: function onClick() {
+                  return _store2.default.dispatch((0, _logoutUser2.default)());
+                }
+              },
+              'Logout ',
+              this.props.name
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return NavigationBarContainer;
+}(_react2.default.Component);
+
+exports.default = NavigationBarContainer;
 
 /***/ })
 /******/ ]);

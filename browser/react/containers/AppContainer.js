@@ -1,31 +1,39 @@
 // NODE MODULES
 import React, {cloneElement} from 'react';
 import axios from 'axios';
-import store from '../../redux/store';
+import Transition from 'react-addons-css-transition-group';
+
 
 // COMPONENTS
 import TweetDisplay from '../components/TweetDisplay';
 import NavigationBar from '../components/NavigationBar';
-import HamburgerMenu from '../components/HamburgerMenu';
+import NavigationBarContainer from '../containers/NavigationBarContainer';
+import HamburgerMenuContainer from '../containers/HamburgerMenuContainer';
 import Intro from '../components/Intro';
 import checkLoggedInUser from '../../redux/action-creators/checkLoggedInUser';
 
-// USING REQUIRE TO GET MORE USEFUL LINTING
+// REDUX
+import store from '../../redux/store';
 import initialState from '../../redux/initialState';
+import logout from '../../redux/action-creators/logoutUser';
+import loadTweets from '../../redux/action-creators/loadTweets';
+import loadHashtags from '../../redux/action-creators/loadHashtags';
 
 // CUSTOM MODULES
-import layoutUtility from '../../../public/js/layoutUtility';
+import layout from '../../../public/js/layoutUtility';
 
 class AppContainer extends React.Component {
 
   constructor() {
     super();
     this.state = store.getState();
-    this.layout = new layoutUtility();
   }
 
   // Load all tweets after initial render
   componentDidMount() {
+
+    store.dispatch(loadTweets('/api/tweets/latest/0/5'));
+    store.dispatch(loadHashtags('/api/tweets/hashtags/popular/0/10'));
 
     // Update state every time redux store changes state
     this.unsubscribe = store.subscribe(() => {
@@ -36,14 +44,14 @@ class AppContainer extends React.Component {
     store.dispatch(checkLoggedInUser());
 
     // Resize any fixed position elements with wrappers
-    this.layout.resizeFixedWrappers();
+    layout.resizeFixedWrappers();
     // Call again after a small delay to make sure HTML assets have rendered
-    setTimeout(this.layout.resizeFixedWrappers, 10);
-    this.layout.addResizeFixedWrappersListener();
+    setTimeout(layout.resizeFixedWrappers, 10);
+    layout.addResizeFixedWrappersListener();
   }
 
   componentWillUnmount() {
-    this.layout.removeResizeFixedWrappersListener();
+    layout.removeResizeFixedWrappersListener();
     this.unsubscribe();
   }
 
@@ -53,11 +61,17 @@ class AppContainer extends React.Component {
     const user = this.state.user.loggedInUser;
     const loggedIn = user !== null ? true : false;
     const name = loggedIn ? user.firstname : null;
+    let hamburgerMenuLinks = [...this.state.ui.navigationLinks];
+    if(loggedIn) {
+      hamburgerMenuLinks.push(
+        {text: 'Logout', url: '#', callbacks: [() => {store.dispatch(logout())}]} // Provide function that *calls* logout to avoid immediately invoking it
+      );
+    }
 
     return (
       <div>
         <div className='hidden-xs'>
-          <NavigationBar 
+          <NavigationBarContainer 
             links={this.state.ui.navigationLinks}
             loggedIn={loggedIn}
             name={name}
@@ -65,12 +79,9 @@ class AppContainer extends React.Component {
         </div>
 
         <div className='hidden-sm hidden-md hidden-lg'>
-          <HamburgerMenu
-            links={this.state.ui.navigationLinks}
-            loggedIn={loggedIn}
-            name={name}
-          />
+          <HamburgerMenuContainer links={hamburgerMenuLinks}/>
         </div>
+
         {this.props.children && 
          cloneElement(this.props.children, {
            currentTweets: this.state.tweets.currentTweets,

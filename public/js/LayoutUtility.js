@@ -5,10 +5,13 @@
  * HTML nodes when window resizes
  */
 class LayoutUtility {
-  
-  constructor() {
-  }
 
+  constructor() {
+    this.resizeFixedWrappers = this.resizeFixedWrappers.bind(this);
+    this.addResizeFixedWrappersListener = this.addResizeFixedWrappersListener.bind(this);
+    this.removeResizeFixedWrappersListener = this.removeResizeFixedWrappersListener.bind(this);
+
+  }
   /**
    * Checks for any nodes that are wrapped around
    * elements with fixed position and resizes
@@ -40,4 +43,4 @@ class LayoutUtility {
   }
 }
 
-export default LayoutUtility;
+export default new LayoutUtility();

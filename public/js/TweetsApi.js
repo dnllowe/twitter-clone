@@ -28,4 +28,4 @@ class TweetsApi {
   }
 }
 
-export default TweetsApi;
+export default new TweetsApi();

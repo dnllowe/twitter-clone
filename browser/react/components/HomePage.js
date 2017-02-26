@@ -19,9 +19,6 @@ class HomePage extends React.Component {
 
   componentDidMount() {
 
-    store.dispatch(loadTweets('/api/tweets/latest/0/5'));
-    store.dispatch(loadHashtags('/api/tweets/hashtags/popular/0/10'));
-
     // Check for new tweets and hashtags every 5 seconds
     this.syncId = setInterval(() => {
       store.dispatch(loadTweets('/api/tweets/latest/0/5'));
@@ -101,7 +98,6 @@ class HomePage extends React.Component {
             </ul>
           </div>
         </div>
-
       </div>
     );
   }
