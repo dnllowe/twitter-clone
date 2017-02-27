@@ -79,7 +79,9 @@ class AppContainer extends React.Component {
         </div>
 
         <div className='hidden-sm hidden-md hidden-lg'>
-          <HamburgerMenuContainer links={hamburgerMenuLinks}/>
+          <HamburgerMenuContainer 
+            links={hamburgerMenuLinks}
+            loggedIn={loggedIn}/>
         </div>
 
         {this.props.children && 

@@ -6,6 +6,7 @@ import store from '../../redux/store';
 import selectUser from '../../redux/action-creators/selectUser';
 
 import UserPage from '../components/UserPage';
+import Avatar from '../components/Avatar';
 
 class UserPageContainer extends React.Component {
 
@@ -40,7 +41,6 @@ class UserPageContainer extends React.Component {
     axios.get(`/api/tweets/user/${this.props.params.username}`)
     .then(res => res.data)
     .then(tweets => {
-      debugger;
       tweets.forEach((tweet) => {
         tweet.animate = true;
       });
@@ -55,9 +55,18 @@ class UserPageContainer extends React.Component {
       <div>
         {this.state.error && <h1>{this.state.error}</h1>}
         {this.props.selectedUser && 
-        <UserPage 
-          user={this.props.selectedUser}
-          tweets={this.state.tweets}/>
+
+        <div>
+           <div className='col-sm-5 text-center fade-in-slide-up-fast'> 
+            <h1>{`${this.props.selectedUser.username}'s profile`}</h1>
+            <Avatar url='https://unsplash.it/250/250/?random'/>
+          </div>
+          <div className='col-sm-4'>
+            <UserPage 
+              user={this.props.selectedUser}
+              tweets={this.state.tweets}/>
+          </div>
+        </div>
         }
       </div>
     );

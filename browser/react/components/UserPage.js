@@ -7,11 +7,9 @@ const UserPage = (props) => {
 
   return (
     <div>
-      {props.user.username} <br/>
-      {props.tweet}
      <TweetList
         tweets={props.tweets}
-        header={`${props.user.username}'s tweets`}
+        header={`Tweets`}
       />
     </div>
   );

@@ -24,7 +24,12 @@ class RelatedTweetsPageContainer extends React.Component {
   updateTweets() {
     axios.get(`/api/tweets/related/${this.props.params.hashTag}`)
     .then(res => res.data)
-    .then(tweets => this.setState({tweets}))
+    .then(tweets => {
+      tweets.forEach(tweet => {
+        tweet.animate = true;
+      })
+      this.setState({tweets})
+    })
     .catch(console.error);
   }
 
@@ -38,7 +43,7 @@ class RelatedTweetsPageContainer extends React.Component {
           top: '35%', 
           right: '80%', 
           transform: 'translateX(50%)'} }>
-          <h1 style={ {fontSize: '4.25em'} }>{`#${this.props.params.hashTag}`}</h1>
+          <h1 className='fade-in-slide-up-med' style={ {fontSize: '4.25em'} }>{`#${this.props.params.hashTag}`}</h1>
         </div>
         <div className='col-sm-offset-5 col-sm-4 col-xs-12'>
           <TweetList 

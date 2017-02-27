@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 
 import HamburgerMenu from '../components/HamburgerMenu';
 import navApi from '../../../public/js/NavApi';
+import LogoutButton from '../components/LogoutButton';
 
 class HamburgerMenuContainer extends React.Component {
 
@@ -69,11 +70,13 @@ class HamburgerMenuContainer extends React.Component {
     }
 
     const updatedLinks = linksArray.map((link, index) => {
+      // Combine new callbacks with any set previously
+      const callbacks = [...link.callbacks, ...callbacksArray];
       return (
         <Link to={link.url} key={index}>
           <li 
             className='hamburger-menu-item' 
-            onClick={() => {callbacksArray.forEach(callback => callback())}}>
+            onClick={() => {callbacks.forEach(callback => callback())}}>
             {link.text}
           </li>
         </Link>       

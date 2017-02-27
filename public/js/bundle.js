@@ -16174,7 +16174,9 @@ var AppContainer = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'hidden-sm hidden-md hidden-lg' },
-          _react2.default.createElement(_HamburgerMenuContainer2.default, { links: hamburgerMenuLinks })
+          _react2.default.createElement(_HamburgerMenuContainer2.default, {
+            links: hamburgerMenuLinks,
+            loggedIn: loggedIn })
         ),
         this.props.children && (0, _react.cloneElement)(this.props.children, {
           currentTweets: this.state.tweets.currentTweets,
@@ -16259,7 +16261,10 @@ var RelatedTweetsPageContainer = function (_React$Component) {
       _axios2.default.get('/api/tweets/related/' + this.props.params.hashTag).then(function (res) {
         return res.data;
       }).then(function (tweets) {
-        return _this2.setState({ tweets: tweets });
+        tweets.forEach(function (tweet) {
+          tweet.animate = true;
+        });
+        _this2.setState({ tweets: tweets });
       }).catch(console.error);
     }
   }, {
@@ -16279,7 +16284,7 @@ var RelatedTweetsPageContainer = function (_React$Component) {
               transform: 'translateX(50%)' } },
           _react2.default.createElement(
             'h1',
-            { style: { fontSize: '4.25em' } },
+            { className: 'fade-in-slide-up-med', style: { fontSize: '4.25em' } },
             '#' + this.props.params.hashTag
           )
         ),
@@ -33941,6 +33946,10 @@ var _NavApi = __webpack_require__(332);
 
 var _NavApi2 = _interopRequireDefault(_NavApi);
 
+var _LogoutButton = __webpack_require__(334);
+
+var _LogoutButton2 = _interopRequireDefault(_LogoutButton);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -34026,6 +34035,8 @@ var HamburgerMenuContainer = function (_React$Component) {
       }
 
       var updatedLinks = linksArray.map(function (link, index) {
+        // Combine new callbacks with any set previously
+        var callbacks = [].concat(_toConsumableArray(link.callbacks), _toConsumableArray(callbacksArray));
         return _react2.default.createElement(
           _reactRouter.Link,
           { to: link.url, key: index },
@@ -34034,7 +34045,7 @@ var HamburgerMenuContainer = function (_React$Component) {
             {
               className: 'hamburger-menu-item',
               onClick: function onClick() {
-                callbacksArray.forEach(function (callback) {
+                callbacks.forEach(function (callback) {
                   return callback();
                 });
               } },
@@ -34370,6 +34381,10 @@ var _UserPage = __webpack_require__(337);
 
 var _UserPage2 = _interopRequireDefault(_UserPage);
 
+var _Avatar = __webpack_require__(49);
+
+var _Avatar2 = _interopRequireDefault(_Avatar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34423,7 +34438,6 @@ var UserPageContainer = function (_React$Component) {
       _axios2.default.get('/api/tweets/user/' + this.props.params.username).then(function (res) {
         return res.data;
       }).then(function (tweets) {
-        debugger;
         tweets.forEach(function (tweet) {
           tweet.animate = true;
         });
@@ -34442,9 +34456,27 @@ var UserPageContainer = function (_React$Component) {
           null,
           this.state.error
         ),
-        this.props.selectedUser && _react2.default.createElement(_UserPage2.default, {
-          user: this.props.selectedUser,
-          tweets: this.state.tweets })
+        this.props.selectedUser && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-5 text-center fade-in-slide-up-fast' },
+            _react2.default.createElement(
+              'h1',
+              null,
+              this.props.selectedUser.username + '\'s profile'
+            ),
+            _react2.default.createElement(_Avatar2.default, { url: 'https://unsplash.it/250/250/?random' })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-4' },
+            _react2.default.createElement(_UserPage2.default, {
+              user: this.props.selectedUser,
+              tweets: this.state.tweets })
+          )
+        )
       );
     }
   }]);
@@ -34524,13 +34556,9 @@ var UserPage = function UserPage(props) {
   return _react2.default.createElement(
     'div',
     null,
-    props.user.username,
-    ' ',
-    _react2.default.createElement('br', null),
-    props.tweet,
     _react2.default.createElement(_TweetList2.default, {
       tweets: props.tweets,
-      header: props.user.username + '\'s tweets'
+      header: 'Tweets'
     })
   );
 };

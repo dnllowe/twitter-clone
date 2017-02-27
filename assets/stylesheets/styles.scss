@@ -296,7 +296,8 @@ $radius-smallest: 2px;
     font-size: $large;
 
     &:hover {
-        background-color: $ternary-hover;
+        background-color: $primary-hover;
+        color: $ternary;
     }
 }
 .button-primary-small {
