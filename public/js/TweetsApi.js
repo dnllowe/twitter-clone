@@ -26,6 +26,11 @@ class TweetsApi {
     return axios.get(`/api/tweets/hashtags/popular/${time}/${limit}`)
     .then(res => res.data);
   }
+
+  getTweets(route) {
+    return axios.get(`/api/tweets/${route}`)
+    .then(res => res.data)
+  }
 }
 
 export default new TweetsApi();

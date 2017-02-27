@@ -3,6 +3,17 @@ import React from 'react';
 
 import TweetDisplay from '../components/TweetDisplay';
 
+/**
+ * Creates a list of tweets
+ * Requires props: 
+ * @prop {String} username should be user.username
+ * @prop {String} handle should be user.handle
+ * @prop {String} content should be tweet.content
+ * @prop {String} name should be user.fullname
+ * @prop {String} id should be tweet.id
+ * @prop {String} animate should be tweet.animate
+ * @prop {String} key should be tweet.id
+ */
 const TweetList = (props) =>  {
   return (
     <div>

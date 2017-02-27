@@ -33850,7 +33850,7 @@ _reactDom2.default.render(_react2.default.createElement(
         _react2.default.createElement(_reactRouter.Route, { path: '/home', component: _HomePage2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/tweets/:tweetId', component: _SingleTweetPageContainer2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/tweets/related/:hashTag', component: _RelatedTweetsPageContainer2.default }),
-        _react2.default.createElement(_reactRouter.Route, { path: '/user/:handle', component: _UserPageContainer2.default })
+        _react2.default.createElement(_reactRouter.Route, { path: '/user/:username', component: _UserPageContainer2.default })
     )
 ), document.getElementById('app'));
 
@@ -33875,6 +33875,17 @@ var _TweetDisplay2 = _interopRequireDefault(_TweetDisplay);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Creates a list of tweets
+ * Requires props: 
+ * @prop {String} username should be user.username
+ * @prop {String} handle should be user.handle
+ * @prop {String} content should be tweet.content
+ * @prop {String} name should be user.fullname
+ * @prop {String} id should be tweet.id
+ * @prop {String} animate should be tweet.animate
+ * @prop {String} key should be tweet.id
+ */
 var TweetList = function TweetList(props) {
   return _react2.default.createElement(
     'div',
@@ -34343,6 +34354,10 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _axios = __webpack_require__(10);
+
+var _axios2 = _interopRequireDefault(_axios);
+
 var _store = __webpack_require__(16);
 
 var _store2 = _interopRequireDefault(_store);
@@ -34372,7 +34387,7 @@ var UserPageContainer = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (UserPageContainer.__proto__ || Object.getPrototypeOf(UserPageContainer)).call(this));
 
     _this.state = {
-      userHandle: props.params.handle,
+      userHandle: props.params.username,
       tweets: null,
       error: null
     };
@@ -34384,16 +34399,41 @@ var UserPageContainer = function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      _store2.default.dispatch((0, _selectUser2.default)(this.props.params.handle)).then(function (potentialError) {
+      _store2.default.dispatch((0, _selectUser2.default)(this.props.params.username)).then(function (potentialError) {
         if (potentialError) {
           _this2.setState({ error: potentialError });
         }
+      }).catch(console.error);
+
+      this.updateTweets();
+      this.syncId = setInterval(function () {
+        return _this2.updateTweets;
+      }, 5000);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      clearInterval(this.syncId);
+    }
+  }, {
+    key: 'updateTweets',
+    value: function updateTweets() {
+      var _this3 = this;
+
+      _axios2.default.get('/api/tweets/user/' + this.props.params.username).then(function (res) {
+        return res.data;
+      }).then(function (tweets) {
+        debugger;
+        tweets.forEach(function (tweet) {
+          tweet.animate = true;
+        });
+        _this3.setState({ tweets: tweets });
       }).catch(console.error);
     }
   }, {
     key: 'render',
     value: function render() {
-      console.log(this.props.selectedUser);
+
       return _react2.default.createElement(
         'div',
         null,
@@ -34402,7 +34442,9 @@ var UserPageContainer = function (_React$Component) {
           null,
           this.state.error
         ),
-        this.props.selectedUser && _react2.default.createElement(_UserPage2.default, { user: this.props.selectedUser })
+        this.props.selectedUser && _react2.default.createElement(_UserPage2.default, {
+          user: this.props.selectedUser,
+          tweets: this.state.tweets })
       );
     }
   }]);
@@ -34471,6 +34513,10 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _TweetList = __webpack_require__(330);
+
+var _TweetList2 = _interopRequireDefault(_TweetList);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var UserPage = function UserPage(props) {
@@ -34478,7 +34524,14 @@ var UserPage = function UserPage(props) {
   return _react2.default.createElement(
     'div',
     null,
-    props.user.username
+    props.user.username,
+    ' ',
+    _react2.default.createElement('br', null),
+    props.tweet,
+    _react2.default.createElement(_TweetList2.default, {
+      tweets: props.tweets,
+      header: props.user.username + '\'s tweets'
+    })
   );
 };
 

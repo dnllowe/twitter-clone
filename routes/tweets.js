@@ -70,6 +70,33 @@ router.get('/latest/:time/:limit', (req, res) => {
 });
 
 
+/**
+ * GET ALL TWEETS BY A SPECIFIC USER
+ */
+router.get('/user/:username', (req, res) => {
+  
+  User.findOne({
+    where: {
+      username: req.params.username
+    }
+  })
+  .then(user => {
+    if(!user){
+      res.json({error: 'User does not exist'})
+    } else {
+      return Tweet.findAll({
+        include: [{model: User, as: 'user'}],
+        where: {
+          userId: user.id
+        }
+      })
+    }
+  })
+  .then(tweets => {
+    res.json(tweets);
+  })
+  .catch(console.error);
+})
 
 /**
  * RETURNS ALL TWEETS WITH HASH TAG 

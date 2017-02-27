@@ -17,7 +17,7 @@ ReactDOM.render(
             <Route path='/home' component={HomePage}/>
             <Route path='/tweets/:tweetId' component={SingleTweetPageContainer}/>
             <Route path='/tweets/related/:hashTag' component={RelatedTweetsPageContainer}/>
-            <Route path='/user/:handle' component={UserPageContainer}/>
+            <Route path='/user/:username' component={UserPageContainer}/>
         </Route> 
     </Router>, 
     document.getElementById('app')
