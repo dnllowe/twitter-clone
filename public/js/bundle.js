@@ -9418,6 +9418,10 @@ var _logoutUser = __webpack_require__(92);
 
 var _logoutUser2 = _interopRequireDefault(_logoutUser);
 
+var _LogoutButton = __webpack_require__(334);
+
+var _LogoutButton2 = _interopRequireDefault(_LogoutButton);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var NavigationBar = function NavigationBar(props) {
@@ -9440,9 +9444,28 @@ var NavigationBar = function NavigationBar(props) {
   }
 
   return _react2.default.createElement(
-    'ul',
-    null,
-    links
+    'div',
+    { className: 'fixed-wrapper' },
+    _react2.default.createElement(
+      'div',
+      { className: 'nav-bar' },
+      _react2.default.createElement(
+        'ul',
+        null,
+        links
+      ),
+      _react2.default.createElement(
+        _reactAddonsCssTransitionGroup2.default,
+        {
+          transitionName: 'fade',
+          transitionEnterTimeout: 250,
+          transitionLeaveTimeout: 250
+        },
+        props.loggedIn && _react2.default.createElement(_LogoutButton2.default, {
+          text: 'Logout ' + props.name,
+          'class': '\n              button-ternary \n              col-lg-offset-6 \n              col-md-offset-4 \n              col-sm-offset-3\n              hidden-xs' })
+      )
+    )
   );
 };
 
@@ -16096,7 +16119,7 @@ var AppContainer = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'hidden-xs' },
-          _react2.default.createElement(_NavigationBarContainer2.default, {
+          _react2.default.createElement(_NavigationBar2.default, {
             links: this.state.ui.navigationLinks,
             loggedIn: loggedIn,
             name: name
@@ -17196,25 +17219,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var HamburgerMenu = function HamburgerMenu(props) {
 
-  // STORE LINKS IN ARRAY FOR USE LATER
-  var links = props.links.map(function (link, index) {
-    return _react2.default.createElement(
-      _reactRouter.Link,
-      { to: link.url, key: index },
-      _react2.default.createElement(
-        'li',
-        {
-          className: 'hamburger-menu-item',
-          onClick: function onClick() {
-            link.callbacks.forEach(function (callback) {
-              return callback();
-            });
-          } },
-        link.text
-      )
-    );
-  });
-
   return _react2.default.createElement(
     'div',
     null,
@@ -17234,7 +17238,7 @@ var HamburgerMenu = function HamburgerMenu(props) {
           _react2.default.createElement(
             'ul',
             null,
-            links
+            props.children
           )
         )
       )
@@ -33834,6 +33838,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(4);
@@ -33851,6 +33857,8 @@ var _NavApi = __webpack_require__(332);
 var _NavApi2 = _interopRequireDefault(_NavApi);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -33909,8 +33917,48 @@ var HamburgerMenuContainer = function (_React$Component) {
   }, {
     key: 'updateLinks',
     value: function updateLinks(links, callbacks) {
-      var linksWithCallbacks = _NavApi2.default.addCallbacksToLinks(links, callbacks);
-      this.setState({ links: linksWithCallbacks });
+
+      // Ensure callbacks are passed into onClick as an array
+      var callbacksArray = [];
+
+      if (typeof callbacks === 'function') {
+        callbacksArray.push(callbacks);
+      } else if (Array.isArray(callbacks)) {
+        callbacksArray = [].concat(_toConsumableArray(callbacks));
+      } else {
+        throw new Error('callbacks paramater must be function or array of functions');
+      }
+
+      // Ensure links are an array
+      var linksArray = [];
+
+      if ((typeof links === 'undefined' ? 'undefined' : _typeof(links)) === Object) {
+        linksArray.push(links);
+      } else if (Array.isArray(links)) {
+        linksArray = [].concat(_toConsumableArray(links));
+      } else {
+        throw new Error('links paramater must be link Object or array of link objects');
+      }
+
+      var updatedLinks = linksArray.map(function (link, index) {
+        return _react2.default.createElement(
+          _reactRouter.Link,
+          { to: link.url, key: index },
+          _react2.default.createElement(
+            'li',
+            {
+              className: 'hamburger-menu-item',
+              onClick: function onClick() {
+                callbacksArray.forEach(function (callback) {
+                  return callback();
+                });
+              } },
+            link.text
+          )
+        );
+      });
+
+      this.setState({ links: updatedLinks });
     }
 
     /**
@@ -33936,7 +33984,6 @@ var HamburgerMenuContainer = function (_React$Component) {
     key: 'render',
     value: function render() {
 
-      if (this.props.loggedIn) {}
       return _react2.default.createElement(
         'div',
         null,
@@ -33958,10 +34005,11 @@ var HamburgerMenuContainer = function (_React$Component) {
             )
           )
         ),
-        _react2.default.createElement(_HamburgerMenu2.default, {
-          links: this.state.links,
-          showMenu: this.state.showMenu
-        })
+        _react2.default.createElement(
+          _HamburgerMenu2.default,
+          { links: this.state.links, showMenu: this.state.showMenu },
+          this.state.links
+        )
       );
     }
   }]);
@@ -33994,7 +34042,7 @@ var NavApi = function () {
   }
 
   _createClass(NavApi, [{
-    key: 'addCallbacksToLinks',
+    key: 'addCallbacksToLinksArray',
 
 
     /**
@@ -34003,7 +34051,12 @@ var NavApi = function () {
      * @param {function|function[]} callbacks A callback function or an array of callback functions
      * @returns {Object[]} returns new links with array given callbacks as callbacks property
      */
-    value: function addCallbacksToLinks(links, callbacks) {
+    value: function addCallbacksToLinksArray(links, callbacks) {
+
+      if (!Array.isArray(links)) {
+        throw new Error('addCallbacksToLinksArray requires links parameter to be an array. Try addCallbacksToLink for single link');
+      }
+
       var linksWithCallbacks = links.map(function (link) {
         var linkWithCallbacks = Object.assign({}, link);
 
@@ -34012,13 +34065,28 @@ var NavApi = function () {
         } else if (Array.isArray(callbacks)) {
           linkWithCallbacks.callbacks = [].concat(_toConsumableArray(link.callbacks), _toConsumableArray(callbacks));
         } else {
-          throw new Error('addCallbacksToLinks second paramater must be function or array of functions');
+          throw new Error('addCallbacksToLinksArray callbacks paramater must be function or array of functions');
         }
 
         return linkWithCallbacks;
       });
 
       return linksWithCallbacks;
+    }
+  }, {
+    key: 'addCallbacksToLink',
+    value: function addCallbacksToLink(link, callbacks) {
+
+      var linkWithCallbacks = Object.assign({}, link);
+
+      if (typeof callbacks === 'function') {
+        linkWithCallbacks.callbacks = [].concat(_toConsumableArray(link.callbacks), [callbacks]);
+      } else if (Array.isArray(callbacks)) {
+        linkWithCallbacks.callbacks = [].concat(_toConsumableArray(link.callbacks), _toConsumableArray(callbacks));
+      } else {
+        throw new Error('addCallbacksToLink callbacks paramater must be function or array of functions');
+      }
+      return linkWithCallbacks;
     }
   }]);
 
@@ -34043,6 +34111,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(24);
 
 var _reactAddonsCssTransitionGroup = __webpack_require__(103);
 
@@ -34080,31 +34150,51 @@ var NavigationBarContainer = function (_React$Component) {
   _createClass(NavigationBarContainer, [{
     key: 'render',
     value: function render() {
+
+      // STORE LINKS IN ARRAY FOR USE LATER
+      var links = [];
+
+      if (this.props.links) {
+        links = this.props.links.map(function (link, index) {
+          return _react2.default.createElement(
+            _reactRouter.Link,
+            { to: link.url, key: index },
+            _react2.default.createElement(
+              'li',
+              { className: 'nav-item' },
+              link.text
+            )
+          );
+        });
+      }
+
       return _react2.default.createElement(
         'div',
         { className: 'fixed-wrapper' },
         _react2.default.createElement(
           'div',
           { className: 'nav-bar' },
-          _react2.default.createElement(_NavigationBar2.default, {
-            links: this.props.links
-          }),
           _react2.default.createElement(
-            _reactAddonsCssTransitionGroup2.default,
-            {
-              transitionName: 'fade',
-              transitionEnterTimeout: 250,
-              transitionLeaveTimeout: 250
-            },
-            this.props.loggedIn && _react2.default.createElement(
-              'button',
-              { className: 'button-ternary-small \n              col-lg-offset-6 \n              col-md-offset-4 \n              col-sm-offset-3\n              hidden-xs',
-                onClick: function onClick() {
-                  return _store2.default.dispatch((0, _logoutUser2.default)());
-                }
+            _NavigationBar2.default,
+            null,
+            links,
+            _react2.default.createElement(
+              _reactAddonsCssTransitionGroup2.default,
+              {
+                transitionName: 'fade',
+                transitionEnterTimeout: 250,
+                transitionLeaveTimeout: 250
               },
-              'Logout ',
-              this.props.name
+              this.props.loggedIn && _react2.default.createElement(
+                'button',
+                { className: 'col-lg-offset-6 \n                col-md-offset-4 \n                col-sm-offset-3\n                hidden-xs',
+                  onClick: function onClick() {
+                    return _store2.default.dispatch((0, _logoutUser2.default)());
+                  }
+                },
+                'Logout ',
+                this.props.name
+              )
             )
           )
         )
@@ -34116,6 +34206,51 @@ var NavigationBarContainer = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = NavigationBarContainer;
+
+/***/ }),
+/* 334 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactAddonsCssTransitionGroup = __webpack_require__(103);
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
+var _store = __webpack_require__(16);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _logoutUser = __webpack_require__(92);
+
+var _logoutUser2 = _interopRequireDefault(_logoutUser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LogoutButton = function LogoutButton(props) {
+
+  return _react2.default.createElement(
+    'button',
+    {
+      className: 'button-ternary-small ' + props.class,
+      onClick: function onClick() {
+        return _store2.default.dispatch((0, _logoutUser2.default)());
+      }
+    },
+    props.text
+  );
+};
+
+exports.default = LogoutButton;
 
 /***/ })
 /******/ ]);

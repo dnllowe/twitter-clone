@@ -8,19 +8,6 @@ import logout from '../../redux/action-creators/logoutUser';
 
 const HamburgerMenu = (props) => {
 
-  // STORE LINKS IN ARRAY FOR USE LATER
-  const links = props.links.map((link, index) => {
-    return (
-      <Link to={link.url} key={index}>
-        <li 
-          className='hamburger-menu-item' 
-          onClick={() => {link.callbacks.forEach(callback => callback())}}>
-          {link.text}
-        </li>
-      </Link>       
-    );
-  });
-
   return (
     <div>    
       {/*// Wrap the menu in a relative positioned container 
@@ -35,7 +22,7 @@ const HamburgerMenu = (props) => {
           {props.showMenu && 
             <div className='hamburger-menu'>
               <ul>
-                {links}
+                {props.children}
               </ul>          
             </div>
           }

@@ -45,9 +45,42 @@ class HamburgerMenuContainer extends React.Component {
    * @param {Function|Function[]} callbacks A callback function or array of callback functions
    */
   updateLinks(links, callbacks) {
-    const linksWithCallbacks = 
-      navApi.addCallbacksToLinks(links, callbacks);
-    this.setState({links: linksWithCallbacks});
+
+    // Ensure callbacks are passed into onClick as an array
+    let callbacksArray = [];
+
+    if(typeof(callbacks) === 'function') {
+      callbacksArray.push(callbacks);
+    } else if(Array.isArray(callbacks)) {
+      callbacksArray = [...callbacks];
+    } else {
+      throw new Error('callbacks paramater must be function or array of functions')
+    }
+
+    // Ensure links are an array
+    let linksArray = [];
+
+    if(typeof(links) === Object) {
+      linksArray.push(links);
+    } else if(Array.isArray(links)) {
+      linksArray = [...links];
+    } else {
+      throw new Error('links paramater must be link Object or array of link objects')
+    }
+
+    const updatedLinks = linksArray.map((link, index) => {
+      return (
+        <Link to={link.url} key={index}>
+          <li 
+            className='hamburger-menu-item' 
+            onClick={() => {callbacksArray.forEach(callback => callback())}}>
+            {link.text}
+          </li>
+        </Link>       
+      );
+    });
+
+    this.setState({links: updatedLinks});
   }
 
   /**
@@ -69,9 +102,6 @@ class HamburgerMenuContainer extends React.Component {
 
   render() {
 
-    if(this.props.loggedIn) {
-      
-    }
     return (
       <div>
         <div className='fixed-wrapper'>
@@ -81,10 +111,9 @@ class HamburgerMenuContainer extends React.Component {
             </span> 
           </div>
         </div>
-        <HamburgerMenu
-          links={this.state.links}
-          showMenu={this.state.showMenu}
-        />
+        <HamburgerMenu links={this.state.links} showMenu={this.state.showMenu}>
+          {this.state.links}
+        </HamburgerMenu>
       </div>
     );
   }

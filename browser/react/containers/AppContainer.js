@@ -71,7 +71,7 @@ class AppContainer extends React.Component {
     return (
       <div>
         <div className='hidden-xs'>
-          <NavigationBarContainer 
+          <NavigationBar
             links={this.state.ui.navigationLinks}
             loggedIn={loggedIn}
             name={name}
