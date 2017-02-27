@@ -206,9 +206,12 @@ class Signup extends React.Component {
     if(lastnameError) {lastnameClass.push('error')}
 
     return (
-      
+   
       <div className='sign-in-box fade-in-slide-up-faster'>
 
+        <div className='ternary no-decoration'style={{position: 'relative', left: '-42.5%', top: '5%'}}>
+          <strong><a href='#' onClick={() => {store.dispatch(displaySignup(false))}}>[ x ]</a></strong>
+        </div>
         {/*STEP ONE*/}
         {!this.state.stepOneComplete && 
           (
@@ -221,7 +224,7 @@ class Signup extends React.Component {
                     {usernameError}
                     {passwordError}
                   </div>
-                 : <h3><strong>Sign up for Twitter Clone</strong></h3>
+                 : <h3><strong>Sign up</strong></h3>
                 } 
               </div>
               <form onSubmit={this.submitStepOne}>
@@ -244,7 +247,9 @@ class Signup extends React.Component {
                 <br />
 
                 {/*SUBMIT*/}
+                {!usernameError && !passwordError &&
                 <button type='submit' className='button-ternary-small'>NEXT</button>
+                }
               </form>
             </div>
           )
@@ -285,7 +290,9 @@ class Signup extends React.Component {
                 <br />
 
                 {/*SUBMIT*/}
+                {!firstnameError && !lastnameError &&
                 <button className='button-ternary-small'>CREATE ACCOUNT</button>
+                }
               </form>
             </div>
           )

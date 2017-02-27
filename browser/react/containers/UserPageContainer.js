@@ -1,11 +1,12 @@
 'use strict';
 import React from 'react';
+import {Link} from 'react-router';
 import axios from 'axios';
 
 import store from '../../redux/store';
 import selectUser from '../../redux/action-creators/selectUser';
 
-import UserPage from '../components/UserPage';
+import TweetList from '../components/TweetList.js';
 import Avatar from '../components/Avatar';
 
 class UserPageContainer extends React.Component {
@@ -60,11 +61,14 @@ class UserPageContainer extends React.Component {
            <div className='col-sm-5 text-center fade-in-slide-up-fast'> 
             <h1>{`${this.props.selectedUser.username}'s profile`}</h1>
             <Avatar url='https://unsplash.it/250/250/?random'/>
+            <br/><br/>
+            <button className='button-ternary border-primary'>Follow</button>
           </div>
-          <div className='col-sm-4'>
-            <UserPage 
-              user={this.props.selectedUser}
-              tweets={this.state.tweets}/>
+          <div className='col-sm-4'>  
+            <TweetList
+              tweets={this.state.tweets}
+              header={`Tweets`}
+            />
           </div>
         </div>
         }

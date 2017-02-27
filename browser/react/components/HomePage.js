@@ -1,4 +1,5 @@
 import React from 'react';
+import Transition from 'react-addons-css-transition-group';
 import axios from 'axios';
 import {Link} from 'react-router';
 
@@ -88,7 +89,7 @@ class HomePage extends React.Component {
             {/* SIGNED IN */}
             {this.props.loggedInUser && 
               (
-                <div>
+                <div className='fade-in-slide-up-fast'>
                   <h1>Hello, {this.props.loggedInUser.firstname}</h1>
                   <br />
                   <Avatar url='https://unsplash.it/250/250/?random'/>
@@ -97,6 +98,7 @@ class HomePage extends React.Component {
               )
             }
 
+              
             {/*NOT SIGNED IN*/}
             {!this.props.loggedInUser &&
              !this.props.isSignupDisplaying && 
@@ -108,7 +110,7 @@ class HomePage extends React.Component {
               this.props.isSignupDisplaying &&
               <Signup/>
             }
-            
+
             <TweetField prompt={this.props.prompt}/>
           </div>
           

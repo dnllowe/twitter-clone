@@ -15805,6 +15805,10 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactAddonsCssTransitionGroup = __webpack_require__(103);
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
 var _axios = __webpack_require__(10);
 
 var _axios2 = _interopRequireDefault(_axios);
@@ -15943,7 +15947,7 @@ var HomePage = function (_React$Component) {
             { className: 'col-sm-5 col-xs-12 text-center' },
             this.props.loggedInUser && _react2.default.createElement(
               'div',
-              null,
+              { className: 'fade-in-slide-up-fast' },
               _react2.default.createElement(
                 'h1',
                 null,
@@ -17598,6 +17602,21 @@ var Signup = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'sign-in-box fade-in-slide-up-faster' },
+        _react2.default.createElement(
+          'div',
+          { className: 'ternary no-decoration', style: { position: 'relative', left: '-42.5%', top: '5%' } },
+          _react2.default.createElement(
+            'strong',
+            null,
+            _react2.default.createElement(
+              'a',
+              { href: '#', onClick: function onClick() {
+                  _store2.default.dispatch((0, _displaySignup2.default)(false));
+                } },
+              '[ x ]'
+            )
+          )
+        ),
         !this.state.stepOneComplete && _react2.default.createElement(
           'div',
           null,
@@ -17615,7 +17634,7 @@ var Signup = function (_React$Component) {
               _react2.default.createElement(
                 'strong',
                 null,
-                'Sign up for Twitter Clone'
+                'Sign up'
               )
             )
           ),
@@ -17635,7 +17654,7 @@ var Signup = function (_React$Component) {
               onChange: this.handlePasswordInput }),
             _react2.default.createElement('br', null),
             _react2.default.createElement('br', null),
-            _react2.default.createElement(
+            !usernameError && !passwordError && _react2.default.createElement(
               'button',
               { type: 'submit', className: 'button-ternary-small' },
               'NEXT'
@@ -17679,7 +17698,7 @@ var Signup = function (_React$Component) {
               onChange: this.handleLastnameInput }),
             _react2.default.createElement('br', null),
             _react2.default.createElement('br', null),
-            _react2.default.createElement(
+            !firstnameError && !lastnameError && _react2.default.createElement(
               'button',
               { className: 'button-ternary-small' },
               'CREATE ACCOUNT'
@@ -34365,6 +34384,8 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = __webpack_require__(24);
+
 var _axios = __webpack_require__(10);
 
 var _axios2 = _interopRequireDefault(_axios);
@@ -34377,9 +34398,9 @@ var _selectUser = __webpack_require__(336);
 
 var _selectUser2 = _interopRequireDefault(_selectUser);
 
-var _UserPage = __webpack_require__(337);
+var _TweetList = __webpack_require__(330);
 
-var _UserPage2 = _interopRequireDefault(_UserPage);
+var _TweetList2 = _interopRequireDefault(_TweetList);
 
 var _Avatar = __webpack_require__(49);
 
@@ -34467,14 +34488,22 @@ var UserPageContainer = function (_React$Component) {
               null,
               this.props.selectedUser.username + '\'s profile'
             ),
-            _react2.default.createElement(_Avatar2.default, { url: 'https://unsplash.it/250/250/?random' })
+            _react2.default.createElement(_Avatar2.default, { url: 'https://unsplash.it/250/250/?random' }),
+            _react2.default.createElement('br', null),
+            _react2.default.createElement('br', null),
+            _react2.default.createElement(
+              'button',
+              { className: 'button-ternary border-primary' },
+              'Follow'
+            )
           ),
           _react2.default.createElement(
             'div',
             { className: 'col-sm-4' },
-            _react2.default.createElement(_UserPage2.default, {
-              user: this.props.selectedUser,
-              tweets: this.state.tweets })
+            _react2.default.createElement(_TweetList2.default, {
+              tweets: this.state.tweets,
+              header: 'Tweets'
+            })
           )
         )
       );
@@ -34529,41 +34558,6 @@ var fetchUser = function fetchUser(username) {
 };
 
 exports.default = fetchUser;
-
-/***/ }),
-/* 337 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(4);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _TweetList = __webpack_require__(330);
-
-var _TweetList2 = _interopRequireDefault(_TweetList);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var UserPage = function UserPage(props) {
-
-  return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(_TweetList2.default, {
-      tweets: props.tweets,
-      header: 'Tweets'
-    })
-  );
-};
-
-exports.default = UserPage;
 
 /***/ })
 /******/ ]);
