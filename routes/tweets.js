@@ -119,7 +119,7 @@ router.post('/', (req, res) => {
       const randomChar = String.fromCharCode(Math.floor(Math.random() * 57) + 65);
       randomName += randomChar;
     }
-    randomName = randomName.replace(/\^]\[`\\\//g, '_');
+    randomName = randomName.replace(/[^a-z0-9]/g, '_');
 
     promise = User.create({
       firstname: 'Anonymous',
