@@ -16,7 +16,7 @@ const createUserRequest = (user) => {
     .then(res => res.data)
     .then(user => {
 
-      if(!user) {console.log("Error creating account"); return}
+      if(user.error) {return user.error;}
       dispatch(createUser(user));
     });
   }

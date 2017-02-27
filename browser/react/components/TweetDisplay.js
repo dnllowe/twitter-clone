@@ -18,7 +18,9 @@ const TweetDisplay = (props) => {
         <Avatar url='https://unsplash.it/50/50/?random'/>
       </div>
       <span className='username'>{props.name}&nbsp;</span> 
-      <span className='handle'>{props.handle}</span>
+      <span className='handle'>
+        <Link to={`${props.handle}`}>{props.handle}</Link>
+      </span>
       <br />
         <Tweet content={props.content} id={props.id}/>
 

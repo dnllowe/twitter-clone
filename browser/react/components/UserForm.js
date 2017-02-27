@@ -35,6 +35,7 @@ class UserForm extends React.Component {
     store.dispatch(updatePassword(this.state.password));
     store.dispatch(updateUsername(this.state.username));
     
+    // Check for any potential errors returned from the promise
     store.dispatch(login())
     .then(potentialError => {
       if(potentialError) {

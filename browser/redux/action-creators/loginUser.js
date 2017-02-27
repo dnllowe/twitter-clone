@@ -29,7 +29,7 @@ const attemptLogin = () => {
     .then(verifiedUser => {
 
       // SHOULD DO SOMETHING AND RETURN IF LOGIN FAILED
-      if(!verifiedUser) {return;}
+      if(verifiedUser.error) {return verifiedUser.error;}
       dispatch(loginUser(verifiedUser));
     });
   }

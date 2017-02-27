@@ -49,10 +49,8 @@ class Signup extends React.Component {
     // Clear any previous errors when user changes username input
     if(this.state.error.username) {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {username: null});
+        const newErrorState = 
+        Object.assign({}, prev.error, {username: null});
         return {error: newErrorState}
       });
     }
@@ -64,12 +62,10 @@ class Signup extends React.Component {
     // Clear any previous errors when user changes password input
     if(this.state.error.password) {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {password: null});
+        const newErrorState = 
+        Object.assign({}, prev.error, {password: null});
         return {error: newErrorState}
-      })
+      });
     }
     store.dispatch(updatePassword(event.target.value));
   }
@@ -79,12 +75,10 @@ class Signup extends React.Component {
     // Clear any previous errors when user changes firstname input
     if(this.state.error.firstname) {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {firstname: null});
+        const newErrorState = 
+        Object.assign({}, prev.error, {firstname: null});
         return {error: newErrorState}
-      })
+      });
     }
     this.setState({firstname: event.target.value});
   }
@@ -94,12 +88,10 @@ class Signup extends React.Component {
     // Clear any previous errors when user changes lastname input
     if(this.state.error.lastname) {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {lastname: null});
+        const newErrorState = 
+        Object.assign({}, prev.error, {lastname: null});
         return {error: newErrorState}
-      })
+      });
     }
 
     this.setState({lastname: event.target.value});
@@ -112,10 +104,8 @@ class Signup extends React.Component {
     // NO USERNAME ERROR
     if(this.state.username === '') {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {username: 'USERNAME REQUIRED'});
+        const newErrorState = 
+        Object.assign({}, prev.error, {username: 'USERNAME REQUIRED'});
         return {error: newErrorState}
       });
     }
@@ -123,12 +113,10 @@ class Signup extends React.Component {
     // NO PASSWORD ERROR
     if(this.state.password === '') {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {password: 'PASSWORD REQUIRED'});
+        const newErrorState = 
+        Object.assign({}, prev.error, {password: 'PASSWORD REQUIRED'});
         return {error: newErrorState}
-      })
+      });
     }
 
     // SUCCESSFUL FORM COMPLETION
@@ -143,25 +131,19 @@ class Signup extends React.Component {
     // NO FIRST NAME ERROR
     if(this.state.firstname === '') {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {firstname: 'FIRST NAME REQUIRED'});
-
-          return {error: newErrorState}
-      })
+        const newErrorState = 
+        Object.assign({}, prev.error, {firstname: 'FIRST NAME REQUIRED'});
+        return {error: newErrorState}
+      });
     }
 
     // NO LAST NAME ERROR
     if(this.state.lastname === '') {
       this.setState((prev, props) => {
-        const newErrorState = Object.assign(
-          {}, 
-          prev.error, 
-          {lastname: 'LAST NAME REQUIRED'});
-
-          return {error: newErrorState}
-      })
+        const newErrorState = 
+        Object.assign({}, prev.error, {lastname: 'LAST NAME REQUIRED'});
+        return {error: newErrorState}
+      });
     }
 
     // SUCCESSFUL FORM COMPLETION
@@ -174,17 +156,13 @@ class Signup extends React.Component {
         password: this.state.password
       }
 
-      /**
-       * createUser may return an error if the user already exists
-       */
+      // Check for any potential errors returned from the promise
       store.dispatch(createUser(user))
       .then(potentialError => {
         if(potentialError) {
           this.setState((prev, props) => {
-            const newErrorState = Object.assign(
-              {}, 
-              prev.error, 
-              {username: potentialError});
+            const newErrorState = 
+            Object.assign({}, prev.error, {username: potentialError});
             return {
               error: newErrorState, 
               stepOneComplete: false
@@ -196,7 +174,6 @@ class Signup extends React.Component {
     }
   }
   
- 
   render() {
     
     // INPUT FIELD CLASS ARRAY

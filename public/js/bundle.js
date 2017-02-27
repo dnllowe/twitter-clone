@@ -6089,7 +6089,11 @@ var TweetDisplay = function TweetDisplay(props) {
     _react2.default.createElement(
       'span',
       { className: 'handle' },
-      props.handle
+      _react2.default.createElement(
+        _reactRouter.Link,
+        { to: '' + props.handle },
+        props.handle
+      )
     ),
     _react2.default.createElement('br', null),
     _react2.default.createElement(_Tweet2.default, { content: props.content, id: props.id })
@@ -9675,8 +9679,8 @@ var attemptLogin = function attemptLogin() {
     }).then(function (verifiedUser) {
 
       // SHOULD DO SOMETHING AND RETURN IF LOGIN FAILED
-      if (!verifiedUser) {
-        return;
+      if (verifiedUser.error) {
+        return verifiedUser.error;
       }
       dispatch(loginUser(verifiedUser));
     });
@@ -17435,7 +17439,6 @@ var Signup = function (_React$Component) {
       if (this.state.firstname === '') {
         this.setState(function (prev, props) {
           var newErrorState = Object.assign({}, prev.error, { firstname: 'FIRST NAME REQUIRED' });
-
           return { error: newErrorState };
         });
       }
@@ -17444,7 +17447,6 @@ var Signup = function (_React$Component) {
       if (this.state.lastname === '') {
         this.setState(function (prev, props) {
           var newErrorState = Object.assign({}, prev.error, { lastname: 'LAST NAME REQUIRED' });
-
           return { error: newErrorState };
         });
       }
@@ -17459,9 +17461,7 @@ var Signup = function (_React$Component) {
           password: this.state.password
         };
 
-        /**
-         * createUser may return an error if the user already exists
-         */
+        // Check for any potential errors returned from the promise
         _store2.default.dispatch((0, _createUser2.default)(user)).then(function (potentialError) {
           if (potentialError) {
             _this3.setState(function (prev, props) {
@@ -17737,7 +17737,10 @@ var TweetField = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (TweetField.__proto__ || Object.getPrototypeOf(TweetField)).call(this));
 
-    _this.state = { input: '' };
+    _this.state = {
+      input: '',
+      error: null };
+
     _this.updateInput = _this.updateInput.bind(_this);
     return _this;
   }
@@ -17745,15 +17748,23 @@ var TweetField = function (_React$Component) {
   _createClass(TweetField, [{
     key: 'updateInput',
     value: function updateInput(event) {
+      if (this.state.error) {
+        this.setState({ error: null });
+      }
       this.setState({ input: event.target.value });
     }
   }, {
     key: 'submitTweet',
     value: function submitTweet(event) {
       event.preventDefault();
-      var reqBody = { tweet: this.state.input };
-      _store2.default.dispatch((0, _addTweet2.default)(reqBody));
-      this.setState({ input: '' });
+
+      if (this.state.input === '') {
+        this.setState({ error: 'Don\'t be shy! :)' });
+      } else {
+        var reqBody = { tweet: this.state.input };
+        _store2.default.dispatch((0, _addTweet2.default)(reqBody));
+        this.setState({ input: '' });
+      }
     }
   }, {
     key: 'render',
@@ -17761,31 +17772,46 @@ var TweetField = function (_React$Component) {
       var _this2 = this;
 
       return _react2.default.createElement(
-        'form',
-        { method: 'POST' },
-        _react2.default.createElement(
-          'span',
+        'div',
+        null,
+        this.state.error && _react2.default.createElement(
+          'div',
           null,
-          _react2.default.createElement('input', {
-            name: 'tweetContent',
-            className: 'input-field',
-            placeholder: this.props.prompt,
-            onChange: this.updateInput,
-            value: this.state.input
-          })
+          _react2.default.createElement(
+            'strong',
+            null,
+            this.state.error
+          ),
+          _react2.default.createElement('br', null),
+          _react2.default.createElement('br', null)
         ),
         _react2.default.createElement(
-          'span',
-          { className: 'margin-left-smaller' },
+          'form',
+          { method: 'POST' },
           _react2.default.createElement(
-            'button',
-            {
-              type: 'submit',
-              className: 'button-primary-small margin-bottom-med',
-              onClick: function onClick(event) {
-                return _this2.submitTweet(event);
-              } },
-            'Tweet'
+            'span',
+            null,
+            _react2.default.createElement('input', {
+              name: 'tweetContent',
+              className: 'input-field',
+              placeholder: this.props.prompt,
+              onChange: this.updateInput,
+              value: this.state.input
+            })
+          ),
+          _react2.default.createElement(
+            'span',
+            { className: 'margin-left-smaller' },
+            _react2.default.createElement(
+              'button',
+              {
+                type: 'submit',
+                className: 'button-primary-small margin-bottom-med',
+                onClick: function onClick(event) {
+                  return _this2.submitTweet(event);
+                } },
+              'Tweet'
+            )
           )
         )
       );
@@ -17883,6 +17909,7 @@ var UserForm = function (_React$Component) {
       _store2.default.dispatch((0, _updatePasswordInput2.default)(this.state.password));
       _store2.default.dispatch((0, _updateUsernameInput2.default)(this.state.username));
 
+      // Check for any potential errors returned from the promise
       _store2.default.dispatch((0, _loginUser2.default)()).then(function (potentialError) {
         if (potentialError) {
           _this2.setState({ error: potentialError });
@@ -18100,8 +18127,8 @@ var createUserRequest = function createUserRequest(user) {
       return res.data;
     }).then(function (user) {
 
-      if (!user) {
-        console.log("Error creating account");return;
+      if (user.error) {
+        return user.error;
       }
       dispatch(createUser(user));
     });
