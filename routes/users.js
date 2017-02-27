@@ -7,7 +7,20 @@ const User = require('../models/User');
  * GET USER INFO
  */
 router.get('/info/:username', (req, res) => {
-  res.send("User GET not set up, yet");
+  User.findOne({
+    where: {
+      username: req.params.username
+    }
+  })
+  .then(user => {
+    if(user){
+      res.json(user);
+    } else {
+      res.json({error: `Whoops! Can't find @${req.params.username}`})
+      throw new Error('User not found in database');
+    }
+  })
+  .catch(console.error);
 });
 
 /**

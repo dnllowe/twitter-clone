@@ -17,12 +17,24 @@ import changePrompt from '../../redux/action-creators/changePrompt';
 
 class HomePage extends React.Component {
 
+  constructor() {
+    super();
+
+    this.state = {
+      tweets: [],
+      hashtags: []
+    }
+  }
+
   componentDidMount() {
+
+    this.updateTweets();
+    this.updateHashtags();
 
     // Check for new tweets and hashtags every 5 seconds
     this.syncId = setInterval(() => {
-      store.dispatch(loadTweets('/api/tweets/latest/0/5'));
-      store.dispatch(loadHashtags('/api/tweets/hashtags/popular/0/10'));
+      this.updateTweets();
+      this.updateHashtags();
     }, 5000);
 
     const prompts = [
@@ -40,6 +52,30 @@ class HomePage extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.syncId);
+  }
+
+  updateTweets() {
+    axios.get(`/api/tweets/latest/0/5`)
+    .then(res => res.data)
+    .then(tweets => {
+      tweets.forEach((tweet) => {
+        tweet.animate = true;
+      });
+      this.setState({tweets})
+    })
+    .catch(console.error);
+  }
+
+  updateHashtags() {
+    axios.get(`/api/tweets/hashtags/popular/0/10/`)
+    .then(res => res.data)
+    .then(hashtags => {
+      hashtags.forEach((hashtag) => {
+        hashtag.animate = true;
+      });
+      this.setState({hashtags})}
+    )
+    .catch(console.error);
   }
 
   render() {
@@ -78,7 +114,7 @@ class HomePage extends React.Component {
           
           <div className='col-sm-4 col-xs-12'>
             <TweetList
-              tweets={this.props.currentTweets}
+              tweets={this.state.tweets}
               header={"Latest Tweets"}
             />
           </div>
@@ -87,9 +123,11 @@ class HomePage extends React.Component {
             <h1>#Trending</h1>
             <br />
             <ul className='no-bullets'>
-              {this.props.currentHashtags && this.props.currentHashtags.map((hashtagData, index) => {
+              {this.state.hashtags && this.state.hashtags.map((hashtagData, index) => {
+                let classNameString = '';
+                if(hashtagData.animate) {classNameString += ' fade-in-slide-up-faster';}
                 return (
-                  <li key={index}>
+                  <li key={index} className={classNameString}>
                     <Link to={`/tweets/related/${hashtagData.hashTag.replace(/#/, '')}`}>
                       {hashtagData.hashTag}
                     </Link>

@@ -19,7 +19,7 @@ const TweetDisplay = (props) => {
       </div>
       <span className='username'>{props.name}&nbsp;</span> 
       <span className='handle'>
-        <Link to={`${props.handle}`}>{props.handle}</Link>
+        <Link to={`/user/${props.username}`}>{props.handle}</Link>
       </span>
       <br />
         <Tweet content={props.content} id={props.id}/>

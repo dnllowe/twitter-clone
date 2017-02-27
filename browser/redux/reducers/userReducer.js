@@ -16,8 +16,7 @@ export default (prevState = defaultState, action) => {
   switch(action.type) {
 
     case actions.CREATE_USER:
-      newState.loggedInUser = action.user;
-      
+      newState.loggedInUser = action.user;   
       break;
     case actions.SELECT_USER:
       newState.selectedUser = action.selectedUser;

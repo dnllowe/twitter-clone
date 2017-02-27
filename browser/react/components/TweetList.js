@@ -11,6 +11,7 @@ const TweetList = (props) =>  {
       {props.tweets && props.tweets.map(tweet => {
         return (                 
           <TweetDisplay 
+            username={tweet.user.username}
             handle={tweet.user.handle} 
             content={tweet.content} 
             name={tweet.user.fullname}

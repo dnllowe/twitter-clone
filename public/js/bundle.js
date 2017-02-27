@@ -6091,7 +6091,7 @@ var TweetDisplay = function TweetDisplay(props) {
       { className: 'handle' },
       _react2.default.createElement(
         _reactRouter.Link,
-        { to: '' + props.handle },
+        { to: '/user/' + props.username },
         props.handle
       )
     ),
@@ -15868,17 +15868,27 @@ var HomePage = function (_React$Component) {
   function HomePage() {
     _classCallCheck(this, HomePage);
 
-    return _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).call(this));
+
+    _this.state = {
+      tweets: [],
+      hashtags: []
+    };
+    return _this;
   }
 
   _createClass(HomePage, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var _this2 = this;
+
+      this.updateTweets();
+      this.updateHashtags();
 
       // Check for new tweets and hashtags every 5 seconds
       this.syncId = setInterval(function () {
-        _store2.default.dispatch((0, _loadTweets2.default)('/api/tweets/latest/0/5'));
-        _store2.default.dispatch((0, _loadHashtags2.default)('/api/tweets/hashtags/popular/0/10'));
+        _this2.updateTweets();
+        _this2.updateHashtags();
       }, 5000);
 
       var prompts = ['What\'s on your mind?', 'Share your thoughts', 'Say it loud. Say it proud.', 'Got something to say?', 'Don\'t keep it to yourself!', 'Say something...'];
@@ -15890,6 +15900,34 @@ var HomePage = function (_React$Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       clearInterval(this.syncId);
+    }
+  }, {
+    key: 'updateTweets',
+    value: function updateTweets() {
+      var _this3 = this;
+
+      _axios2.default.get('/api/tweets/latest/0/5').then(function (res) {
+        return res.data;
+      }).then(function (tweets) {
+        tweets.forEach(function (tweet) {
+          tweet.animate = true;
+        });
+        _this3.setState({ tweets: tweets });
+      }).catch(console.error);
+    }
+  }, {
+    key: 'updateHashtags',
+    value: function updateHashtags() {
+      var _this4 = this;
+
+      _axios2.default.get('/api/tweets/hashtags/popular/0/10/').then(function (res) {
+        return res.data;
+      }).then(function (hashtags) {
+        hashtags.forEach(function (hashtag) {
+          hashtag.animate = true;
+        });
+        _this4.setState({ hashtags: hashtags });
+      }).catch(console.error);
     }
   }, {
     key: 'render',
@@ -15926,7 +15964,7 @@ var HomePage = function (_React$Component) {
             'div',
             { className: 'col-sm-4 col-xs-12' },
             _react2.default.createElement(_TweetList2.default, {
-              tweets: this.props.currentTweets,
+              tweets: this.state.tweets,
               header: "Latest Tweets"
             })
           ),
@@ -15942,10 +15980,14 @@ var HomePage = function (_React$Component) {
             _react2.default.createElement(
               'ul',
               { className: 'no-bullets' },
-              this.props.currentHashtags && this.props.currentHashtags.map(function (hashtagData, index) {
+              this.state.hashtags && this.state.hashtags.map(function (hashtagData, index) {
+                var classNameString = '';
+                if (hashtagData.animate) {
+                  classNameString += ' fade-in-slide-up-faster';
+                }
                 return _react2.default.createElement(
                   'li',
-                  { key: index },
+                  { key: index, className: classNameString },
                   _react2.default.createElement(
                     _reactRouter.Link,
                     { to: '/tweets/related/' + hashtagData.hashTag.replace(/#/, '') },
@@ -18448,7 +18490,6 @@ exports.default = function () {
 
     case _actions2.default.CREATE_USER:
       newState.loggedInUser = action.user;
-
       break;
     case _actions2.default.SELECT_USER:
       newState.selectedUser = action.selectedUser;
@@ -33793,6 +33834,10 @@ var _RelatedTweetsPageContainer = __webpack_require__(152);
 
 var _RelatedTweetsPageContainer2 = _interopRequireDefault(_RelatedTweetsPageContainer);
 
+var _UserPageContainer = __webpack_require__(335);
+
+var _UserPageContainer2 = _interopRequireDefault(_UserPageContainer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _reactDom2.default.render(_react2.default.createElement(
@@ -33804,7 +33849,8 @@ _reactDom2.default.render(_react2.default.createElement(
         _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/home' }),
         _react2.default.createElement(_reactRouter.Route, { path: '/home', component: _HomePage2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/tweets/:tweetId', component: _SingleTweetPageContainer2.default }),
-        _react2.default.createElement(_reactRouter.Route, { path: '/tweets/related/:hashTag', component: _RelatedTweetsPageContainer2.default })
+        _react2.default.createElement(_reactRouter.Route, { path: '/tweets/related/:hashTag', component: _RelatedTweetsPageContainer2.default }),
+        _react2.default.createElement(_reactRouter.Route, { path: '/user/:handle', component: _UserPageContainer2.default })
     )
 ), document.getElementById('app'));
 
@@ -33841,6 +33887,7 @@ var TweetList = function TweetList(props) {
     _react2.default.createElement('br', null),
     props.tweets && props.tweets.map(function (tweet) {
       return _react2.default.createElement(_TweetDisplay2.default, {
+        username: tweet.user.username,
         handle: tweet.user.handle,
         content: tweet.content,
         name: tweet.user.fullname,
@@ -34278,6 +34325,164 @@ var LogoutButton = function LogoutButton(props) {
 };
 
 exports.default = LogoutButton;
+
+/***/ }),
+/* 335 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _store = __webpack_require__(16);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _selectUser = __webpack_require__(336);
+
+var _selectUser2 = _interopRequireDefault(_selectUser);
+
+var _UserPage = __webpack_require__(337);
+
+var _UserPage2 = _interopRequireDefault(_UserPage);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserPageContainer = function (_React$Component) {
+  _inherits(UserPageContainer, _React$Component);
+
+  function UserPageContainer(props) {
+    _classCallCheck(this, UserPageContainer);
+
+    var _this = _possibleConstructorReturn(this, (UserPageContainer.__proto__ || Object.getPrototypeOf(UserPageContainer)).call(this));
+
+    _this.state = {
+      userHandle: props.params.handle,
+      tweets: null,
+      error: null
+    };
+    return _this;
+  }
+
+  _createClass(UserPageContainer, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      _store2.default.dispatch((0, _selectUser2.default)(this.props.params.handle)).then(function (potentialError) {
+        if (potentialError) {
+          _this2.setState({ error: potentialError });
+        }
+      }).catch(console.error);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      console.log(this.props.selectedUser);
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.state.error && _react2.default.createElement(
+          'h1',
+          null,
+          this.state.error
+        ),
+        this.props.selectedUser && _react2.default.createElement(_UserPage2.default, { user: this.props.selectedUser })
+      );
+    }
+  }]);
+
+  return UserPageContainer;
+}(_react2.default.Component);
+
+exports.default = UserPageContainer;
+
+/***/ }),
+/* 336 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.selectUser = undefined;
+
+var _axios = __webpack_require__(10);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _actions = __webpack_require__(8);
+
+var _actions2 = _interopRequireDefault(_actions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var selectUser = exports.selectUser = function selectUser(selectedUser) {
+  return {
+    type: _actions2.default.SELECT_USER,
+    selectedUser: selectedUser
+  };
+};
+
+var fetchUser = function fetchUser(username) {
+  return function (dispatch) {
+    return _axios2.default.get('/api/users/info/' + username).then(function (res) {
+      return res.data;
+    }).then(function (user) {
+      if (user.error) {
+        return user.error;
+      }
+      dispatch(selectUser(user));
+    });
+  };
+};
+
+exports.default = fetchUser;
+
+/***/ }),
+/* 337 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var UserPage = function UserPage(props) {
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    props.user.username
+  );
+};
+
+exports.default = UserPage;
 
 /***/ })
 /******/ ]);
