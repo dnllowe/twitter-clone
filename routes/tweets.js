@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const router = require('express').Router();
 const Tweet = require('../models/Tweet');
@@ -10,7 +10,7 @@ const sequelize = require('sequelize');
  * GET ALL TWEETS
  */
 router.get('/all', (req, res) => {
-  
+
   Tweet.findAll({
     order: [['createdAt', 'DESC']],
     include: [
@@ -30,7 +30,7 @@ router.get('/all', (req, res) => {
  * @param {INTEGER} id is the tweet's id in the database
  */
 router.get('/tweet/:id', (req, res) => {
-    
+
   Tweet.findOne({
     where: {id: req.params.id},
     include: [{model: User, as: 'user'}]
@@ -60,7 +60,7 @@ router.get('/latest/:time/:limit', (req, res) => {
   }
 
   // Only limit if sent a value greater than 0 in route
-  if(req.params.limit > 0) {query.limit = req.params.limit;}
+  if (req.params.limit > 0) {query.limit = req.params.limit;}
 
   Tweet.findAll(query)
   .then((orderedTweets) => {
@@ -74,14 +74,14 @@ router.get('/latest/:time/:limit', (req, res) => {
  * GET ALL TWEETS BY A SPECIFIC USER
  */
 router.get('/user/:username', (req, res) => {
-  
+
   User.findOne({
     where: {
       username: req.params.username
     }
   })
   .then(user => {
-    if(!user){
+    if (!user){
       res.json({error: 'User does not exist'})
     } else {
       return Tweet.findAll({
@@ -96,13 +96,13 @@ router.get('/user/:username', (req, res) => {
     res.json(tweets);
   })
   .catch(console.error);
-})
+});
 
 /**
- * RETURNS ALL TWEETS WITH HASH TAG 
+ * RETURNS ALL TWEETS WITH HASH TAG
  */
 router.get('/related/:hashTag', (req, res) => {
-  
+
   // # removed in request URL
   const hashTag = '#' + req.params.hashTag;
 
@@ -136,13 +136,12 @@ router.post('/', (req, res) => {
   let promise = null;
 
   // If no user is logged in, we will create a random one
-  if(!req.session.userId) {
+  if (!req.session.userId) {
 
-    let randomUser = {}
     const charLength = Math.floor(Math.random() * 10) + 5;
     let randomName = '';
 
-    for(let iii = 0; iii < charLength; iii++) {  
+    for (let iii = 0; iii < charLength; iii++) {  
       const randomChar = String.fromCharCode(Math.floor(Math.random() * 57) + 65);
       randomName += randomChar;
     }
@@ -153,16 +152,16 @@ router.post('/', (req, res) => {
       lastname: 'Tweet',
       username: randomName,
       password: 'password'
-    })
+    });
   } else {
     promise = User.findById(req.session.userId);
   }
 
   promise.then(user => {
- 
+
     //If user wasn't logged in before, store user in session now
-    if(!req.session.userId) {req.session.userId = user.id;}
-    
+    if (!req.session.userId) {req.session.userId = user.id;}
+
     return Tweet.create({
       content: req.body.tweet,
       hashTags,
@@ -173,7 +172,7 @@ router.post('/', (req, res) => {
     return Tweet.findOne({
       where: {id: newTweet.id},
       include: [{model: User, as: 'user'}]
-    })
+    });
   })
   .then(newTweetWithUser => {
     res.json(newTweetWithUser);
@@ -207,7 +206,7 @@ router.get('/hashtags', (req, res) => {
         const index = uniqueHashtags.findIndex((element) => {
           return element.hashTag === hashTag;
         });
-        if(index === -1) {uniqueHashtags.push({hashTag});}
+        if (index === -1) {uniqueHashtags.push({hashTag});}
       });
     });
     res.json(uniqueHashtags);
@@ -244,12 +243,12 @@ router.get('/hashtags/popular/:time/:limit', (req, res) => {
 
     tweets.forEach((tweet) => {
       tweet.hashTags.forEach((hashTag) => {
-        
+
         const index = uniqueHashtags.findIndex((element) => {
           return element.hashTag === hashTag;
         });
 
-        if(index === -1) {
+        if (index === -1) {
           uniqueHashtags.push({hashTag, frequency: 1});
         } else {        
           uniqueHashtags[index].frequency++;     
@@ -261,7 +260,7 @@ router.get('/hashtags/popular/:time/:limit', (req, res) => {
     });
 
     // Send all tweets if limit is sent as 0
-    if(req.params.limit > 0) {
+    if (req.params.limit > 0) {
       res.json(uniqueHashtags.slice(0, req.params.limit));
     } else {
       res.json(uniqueHashtags);
