@@ -81,15 +81,15 @@ router.get('/user/:username', (req, res) => {
     }
   })
   .then(user => {
-    if (!user){
-      res.json({error: 'User does not exist'})
+    if (!user) {
+      res.json({error: 'User does not exist'});
     } else {
       return Tweet.findAll({
         include: [{model: User, as: 'user'}],
         where: {
           userId: user.id
         }
-      })
+      });
     }
   })
   .then(tweets => {

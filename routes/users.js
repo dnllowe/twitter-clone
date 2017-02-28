@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const router = require('express').Router();
 const User = require('../models/User');
@@ -13,10 +13,10 @@ router.get('/info/:username', (req, res) => {
     }
   })
   .then(user => {
-    if(user){
+    if (user){
       res.json(user);
     } else {
-      res.json({error: `Whoops! Can't find @${req.params.username}`})
+      res.json({error: `Whoops! Can't find @${req.params.username}`});
       throw new Error('User not found in database');
     }
   })
@@ -34,7 +34,7 @@ router.post('/login', (req, res) => {
     where: {username, password}
   })
   .then(user => {
-    if(user) {
+    if (user) {
       req.session.userId = user.id;
       res.json(user);
     }
@@ -48,7 +48,7 @@ router.post('/login', (req, res) => {
  */
 router.delete('/logout', (req, res) => {
   delete req.session.userId;
-  res.sendStatus(204);  
+  res.sendStatus(204);
 });
 
 
@@ -93,10 +93,71 @@ router.get('/current-user', (req, res) => {
     User.findById(req.session.userId)
     .then(user => {res.json(user);}
     )
-    .catch(console.error)
+    .catch(console.error);
   } else {
     res.json(null);
   }
 });
+
+/**
+ * Retrieve all followers for a given user
+ */
+router.get('/:id/followers', (req, res) => {
+  User.findById(req.params.id)
+  .then(user => {
+    return user.getFollowers();
+  })
+  .then(followers => {
+    res.json(followers);
+  })
+  .catch(console.error);
+});
+
+/**
+ * Retrieve all users that a user is following
+ */
+router.get('/:id/following', (req, res) => {
+   User.findById(req.params.id)
+  .then(user => {
+    return user.getSubscriptions();
+  })
+  .then(subscriptions => {
+    res.json(subscriptions);
+  })
+  .catch(console.error);
+});
+
+/**
+ * Set a user to follow another user
+ */
+router.put('/:userId/following/:followId', (req, res) => {
+  User.findById(req.params.userId)
+  .then(user => {
+    user.addSubscription(req.params.followId);
+    return User.findById(req.params.followId);
+  })
+  .then(followedUser => {
+    followedUser.addFollower(req.params.userId);
+    res.sendStatus(204);
+  })
+  .catch(console.error);
+});
+
+/**
+ * Stop user from following another user
+ */
+router.delete('/:userId/following/:followId', (req, res) => {
+  User.findById(req.params.userId)
+  .then(user => {
+    user.removeSubscription(req.params.followId);
+    return User.findById(req.params.followId);
+  })
+  .then(followedUser => {
+    followedUser.removeFollower(req.params.userId);
+    res.sendStatus(204);
+  })
+  .catch(console.error);
+});
+
 
 module.exports = router;

@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import {Link} from 'react-router';
 import axios from 'axios';
 
 import store from '../../redux/store';
@@ -24,7 +23,7 @@ class UserPageContainer extends React.Component {
   componentDidMount() {
     store.dispatch(selectUser(this.props.params.username))
     .then(potentialError => {
-      if(potentialError) {
+      if (potentialError) {
         this.setState({error: potentialError});
       }
     })

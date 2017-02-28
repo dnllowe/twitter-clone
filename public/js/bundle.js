@@ -16560,8 +16560,6 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouter = __webpack_require__(18);
-
 var _axios = __webpack_require__(8);
 
 var _axios2 = _interopRequireDefault(_axios);
