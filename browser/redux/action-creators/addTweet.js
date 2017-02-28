@@ -1,11 +1,11 @@
-'use strict'
+'use strict';
 
 import axios from 'axios';
 
 import actions from '../actions';
 
 export const addTweet = tweet => {
-  
+
   return {
     type: actions.ADD_TWEET,
     tweet
@@ -14,12 +14,12 @@ export const addTweet = tweet => {
 
 const postTweet = reqBody => {
 
-  return (dispatch, prevState) => {
+  return (dispatch) => {
     return axios.post('/api/tweets', reqBody)
     .then(res => res.data)
     .then(newTweet => {
       newTweet.animate = true;
-      dispatch(addTweet(newTweet))
+      dispatch(addTweet(newTweet));
     });
   }
 }

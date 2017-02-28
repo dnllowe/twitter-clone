@@ -62,7 +62,7 @@ router.post('/', (req, res) => {
     where: {username: req.body.username}
   })
   .then(user => {
-    if(user){
+    if (user) {
       res.json({error: 'USERNAME ALEADY EXISTS'});
       throw new Error('USERNAME ALREADY EXISTS');
     } else {
@@ -81,15 +81,15 @@ router.post('/', (req, res) => {
  * UPDATE USER INFO
  */
 router.put('/', (req, res) => {
-  res.send("User POST for tweets not set up, yet");
+  res.send('User POST for tweets not set up, yet');
 });
 
 /**
  * RETRIEVE CURRENT LOGGED IN USER
  */
 router.get('/current-user', (req, res) => {
-  
-  if(req.session.userId) {
+
+  if (req.session.userId) {
     User.findById(req.session.userId)
     .then(user => {res.json(user);}
     )
