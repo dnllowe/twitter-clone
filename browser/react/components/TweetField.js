@@ -53,7 +53,8 @@ class TweetField extends React.Component {
           <span>
             <input 
               name='tweetContent' 
-              className='input-field' 
+              className='input-field'
+              style={ {width: '50%'} } 
               placeholder={this.props.prompt} 
               onChange={this.updateInput}
               value={this.state.input}

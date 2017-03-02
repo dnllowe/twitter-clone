@@ -24,17 +24,18 @@ class HomePage extends React.Component {
     this.state = {
       tweets: [],
       hashtags: []
-    }
+    };
   }
 
   componentDidMount() {
 
-    this.updateTweets();
+    //Initial route for tweets is just latest 5
+    this.updateTweets(this.props.loggedInUser);
     this.updateHashtags();
 
     // Check for new tweets and hashtags every 5 seconds
     this.syncId = setInterval(() => {
-      this.updateTweets();
+      this.updateTweets(this.props.loggedInUser);
       this.updateHashtags();
     }, 5000);
 
@@ -55,14 +56,37 @@ class HomePage extends React.Component {
     clearInterval(this.syncId);
   }
 
-  updateTweets() {
-    axios.get(`/api/tweets/latest/0/5`)
+  componentWillReceiveProps(nextProps) {
+
+    // If the logged in user changes, the tweets displayed
+    // will change to tweets specific to the new user
+    if (this.props.loggedInUser !== nextProps.loggedInUser) {
+      this.updateTweets(nextProps.loggedInUser);
+    }
+  }
+
+  /**
+   * Updates tweets array based on tweets received from route
+   * If no route specified, will gather latest tweets or tweets
+   * Followed by logged in user
+   */
+  updateTweets(loggedInUser) {
+
+    let tweetsRoute;
+
+    if (loggedInUser) {
+      tweetsRoute = `api/tweets/follower/${loggedInUser.id}/0/5`;
+    } else {
+      tweetsRoute = `api/tweets/latest/0/5`;
+    }
+
+    axios.get(tweetsRoute)
     .then(res => res.data)
     .then(tweets => {
       tweets.forEach((tweet) => {
         tweet.animate = true;
       });
-      this.setState({tweets})
+      this.setState({tweets});
     })
     .catch(console.error);
   }
@@ -84,7 +108,7 @@ class HomePage extends React.Component {
       <div>
         <div className='row'>
           
-          <div className='col-sm-5 col-xs-12 text-center'>
+          <div className='col-sm-4 col-xs-12 text-center'>
             
             {/* SIGNED IN */}
             {this.props.loggedInUser && 
@@ -115,16 +139,33 @@ class HomePage extends React.Component {
           </div>
           
           <div className='col-sm-4 col-xs-12'>
+            {this.state.tweets.length ?
             <TweetList
               tweets={this.state.tweets}
               header={"Latest Tweets"}
             />
+            : (
+              <div className='text-center'>
+                <h2>No Tweets to Display :(</h2>
+                <br /><br />
+                <h4>Follow users to see their tweets!</h4>
+                <br /><br />
+                <input 
+                  className='input-field'
+                  style={ {width: '75%'} }
+                  placeholder="Look for users and hashtags"
+                />
+                <br /><br />
+              </div>
+            )
+            }
+            
           </div>
 
-          <div className='col-sm-3 hidden-xs'>
-            <h1>#Trending</h1>
+          <div className='col-sm-4 hidden-xs'>
+            <h1 className='text-center'>#Trending</h1>
             <br />
-            <ul className='no-bullets'>
+            <ul className='no-bullets col-sm-offset-3'>
               {this.state.hashtags && this.state.hashtags.map((hashtagData, index) => {
                 let classNameString = '';
                 if(hashtagData.animate) {classNameString += ' fade-in-slide-up-faster';}

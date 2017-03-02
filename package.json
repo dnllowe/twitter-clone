@@ -4,7 +4,7 @@
   "description": "a cool tweet app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -e js server.js",
+    "start": "concurrently --kill-others \"nodemon -e js server.js\" \"npm run build-css\" \"npm run build-frontend\"",
     "build-css": "node-sass -w assets/stylesheets/styles.scss -o public/stylesheets",
     "build-frontend": "webpack -w",
     "test": "mocha --watch test/**.js"
@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "concurrently": "^3.3.0",
     "mocha": "^3.2.0",
     "morgan": "^1.8.0",
     "nodemon": "^1.11.0"

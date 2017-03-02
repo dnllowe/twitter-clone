@@ -17,8 +17,9 @@ import TweetDisplay from '../components/TweetDisplay';
 const TweetList = (props) =>  {
   return (
     <div>
-    <h1>{props.header}</h1>
+    <h1 className='text-center'>{props.header}</h1>
     <br/>
+    <div className='col-xs-offset-2'>
       {props.tweets && props.tweets.map(tweet => {
         return (                 
           <TweetDisplay 
@@ -32,6 +33,7 @@ const TweetList = (props) =>  {
           />
         );
       })}
+      </div>
     </div>
   );
 }

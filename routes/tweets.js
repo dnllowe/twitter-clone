@@ -3,8 +3,6 @@
 const router = require('express').Router();
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
-const sequelize = require('sequelize');
-
 
 /**
  * GET ALL TWEETS
@@ -98,6 +96,32 @@ router.get('/user/:username', (req, res) => {
   .catch(console.error);
 });
 
+/**
+ * GET ALL TWEETS FROM USERS ANOTHER USER FOLLOWS
+ */
+router.get('/follower/:followerId/:time/:limit', (req, res) => {
+  User.findById(req.params.followerId)
+  .then(user => {
+    return user.getSubscriptions({
+      attributes: ['id']
+    });
+  })
+  .then(followedUsers => {
+    let followedUsersIds = followedUsers.map(user => user.id);
+    return Tweet.findAll({
+      where: {
+        userId: {
+          $in: followedUsersIds
+        }
+      },
+      include: [{model: User, as: 'user'}]
+    });
+  })
+  .then(followedTweets => {
+    res.json(followedTweets);
+  })
+  .catch(console.error);
+})
 /**
  * RETURNS ALL TWEETS WITH HASH TAG
  */
