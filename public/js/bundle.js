@@ -9268,6 +9268,10 @@ var _initialState = __webpack_require__(29);
 
 var _initialState2 = _interopRequireDefault(_initialState);
 
+var _store = __webpack_require__(10);
+
+var _store2 = _interopRequireDefault(_store);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var defaultState = {
@@ -9279,6 +9283,7 @@ exports.default = function () {
   var action = arguments[1];
 
 
+  console.log(_store2.default);
   var newState = Object.assign({}, prevState);
 
   switch (action.type) {
@@ -9290,9 +9295,7 @@ exports.default = function () {
       newState.selectedUser = action.selectedUser;
       break;
     case _actions2.default.SET_ALL_USERS:
-      debugger;
       newState.allUsers = action.allUsers;
-      console.log(action.allUsers);
       break;
     case _actions2.default.LOGIN_USER:
       newState.loggedInUser = action.user;
@@ -16058,6 +16061,10 @@ var _Avatar = __webpack_require__(44);
 
 var _Avatar2 = _interopRequireDefault(_Avatar);
 
+var _FilteredSearchContainer = __webpack_require__(338);
+
+var _FilteredSearchContainer2 = _interopRequireDefault(_FilteredSearchContainer);
+
 var _loadTweets = __webpack_require__(54);
 
 var _loadTweets2 = _interopRequireDefault(_loadTweets);
@@ -16228,11 +16235,7 @@ var HomePage = function (_React$Component) {
               ),
               _react2.default.createElement('br', null),
               _react2.default.createElement('br', null),
-              _react2.default.createElement('input', {
-                className: 'input-field',
-                style: { width: '75%' },
-                placeholder: 'Look for users and hashtags'
-              }),
+              _react2.default.createElement(_FilteredSearchContainer2.default, null),
               _react2.default.createElement('br', null),
               _react2.default.createElement('br', null)
             )
@@ -34663,6 +34666,156 @@ var fetchAllUsers = function fetchAllUsers() {
 };
 
 exports.default = fetchAllUsers;
+
+/***/ }),
+/* 337 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _store = __webpack_require__(10);
+
+var _store2 = _interopRequireDefault(_store);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var FilteredSearchBar = function (_React$Component) {
+  _inherits(FilteredSearchBar, _React$Component);
+
+  function FilteredSearchBar() {
+    _classCallCheck(this, FilteredSearchBar);
+
+    return _possibleConstructorReturn(this, (FilteredSearchBar.__proto__ || Object.getPrototypeOf(FilteredSearchBar)).apply(this, arguments));
+  }
+
+  _createClass(FilteredSearchBar, [{
+    key: 'render',
+    value: function render() {
+      var items = this.props.items;
+      var placeholder = this.props.placeholder;
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement('input', {
+          className: 'input-field',
+          style: { width: '75%' },
+          placeholder: placeholder
+        }),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          'p',
+          null,
+          items && items.map(function (item) {
+            return _react2.default.createElement(
+              'span',
+              null,
+              item.username
+            );
+          })
+        )
+      );
+    }
+  }]);
+
+  return FilteredSearchBar;
+}(_react2.default.Component);
+
+exports.default = FilteredSearchBar;
+
+/***/ }),
+/* 338 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _store = __webpack_require__(10);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _FilteredSearchBar = __webpack_require__(337);
+
+var _FilteredSearchBar2 = _interopRequireDefault(_FilteredSearchBar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var FilteredSearchContainer = function (_React$Component) {
+  _inherits(FilteredSearchContainer, _React$Component);
+
+  function FilteredSearchContainer() {
+    _classCallCheck(this, FilteredSearchContainer);
+
+    var _this = _possibleConstructorReturn(this, (FilteredSearchContainer.__proto__ || Object.getPrototypeOf(FilteredSearchContainer)).call(this));
+
+    _this.state = {
+      allUsers: null
+    };
+    return _this;
+  }
+
+  _createClass(FilteredSearchContainer, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.setState({ allUsers: _store2.default.getState().user.allUsers });
+      this.unsubscribe = _store2.default.subscribe(function () {
+        _this2.setState({ allUsers: _store2.default.getState().user.allUsers });
+      });
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.unsubscribe();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(_FilteredSearchBar2.default, {
+        items: this.state.allUsers,
+        placeholder: 'Look for people to follow by username or hashtags'
+      });
+    }
+  }]);
+
+  return FilteredSearchContainer;
+}(_react2.default.Component);
+
+exports.default = FilteredSearchContainer;
 
 /***/ })
 /******/ ]);

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import actions from '../actions';
 import initialState from '../initialState';
+import store from '../store';
 
 const defaultState = {
   user: initialState.user,
@@ -9,8 +10,9 @@ const defaultState = {
 
 export default (prevState = defaultState, action) => {
 
+  console.log(store);  
   let newState = Object.assign({}, prevState);
-
+  
   switch(action.type) {
 
     case actions.CREATE_USER:
@@ -20,9 +22,7 @@ export default (prevState = defaultState, action) => {
       newState.selectedUser = action.selectedUser;
       break;
     case actions.SET_ALL_USERS:
-      debugger;  
       newState.allUsers = action.allUsers;
-      console.log(action.allUsers);
       break;
     case actions.LOGIN_USER:
       newState.loggedInUser = action.user;

@@ -7,7 +7,6 @@ const User = require('../models/User');
  * GET ALL USERS
  */
 router.get('/all', (req, res) => {
-  console.log("HERE");
   User.findAll()
   .then(users => {res.json(users);})
   .catch(console.error);
