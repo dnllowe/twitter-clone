@@ -5,8 +5,6 @@ import initialState from '../initialState';
 
 const defaultState = {
   user: initialState.user,
-  input: initialState.input,
-  ui: initialState.ui
 }
 
 export default (prevState = defaultState, action) => {
@@ -20,6 +18,11 @@ export default (prevState = defaultState, action) => {
       break;
     case actions.SELECT_USER:
       newState.selectedUser = action.selectedUser;
+      break;
+    case actions.SET_ALL_USERS:
+      debugger;  
+      newState.allUsers = action.allUsers;
+      console.log(action.allUsers);
       break;
     case actions.LOGIN_USER:
       newState.loggedInUser = action.user;
