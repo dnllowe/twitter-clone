@@ -4,6 +4,15 @@ const router = require('express').Router();
 const User = require('../models/User');
 
 /**
+ * GET ALL USERS
+ */
+router.get('/all', (req, res) => {
+  User.findAll()
+  .then(users => {res.json(users);})
+  .catch(console.error);
+});
+
+/**
  * GET USER INFO
  */
 router.get('/info/:username', (req, res) => {

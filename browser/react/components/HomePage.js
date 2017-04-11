@@ -10,6 +10,7 @@ import Intro from './Intro';
 import TweetField from './Tweetfield';
 import Signup from './Signup';
 import Avatar from './Avatar';
+import FilteredSearchContainer from '../containers/FilteredSearchContainer';
 
 // ACTIONS
 import loadTweets from '../../redux/action-creators/loadTweets';
@@ -150,11 +151,7 @@ class HomePage extends React.Component {
                 <br /><br />
                 <h4>Follow users to see their tweets!</h4>
                 <br /><br />
-                <input 
-                  className='input-field'
-                  style={ {width: '75%'} }
-                  placeholder="Look for users and hashtags"
-                />
+                <FilteredSearchContainer />
                 <br /><br />
               </div>
             )

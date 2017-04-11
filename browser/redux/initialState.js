@@ -23,6 +23,7 @@ export default {
   },
   user: {
     selectedUser: null,
-    loggedInUser: null
+    loggedInUser: null,
+    allUsers: null
   }
 }

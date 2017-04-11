@@ -1,6 +1,5 @@
 'use strict';
 import axios from 'axios';
-
 import actions from '../actions';
 
 export const selectUser = (selectedUser) => {
