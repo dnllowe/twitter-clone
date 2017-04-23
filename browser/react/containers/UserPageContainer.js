@@ -8,6 +8,8 @@ import selectUser from '../../redux/action-creators/selectUser';
 import TweetList from '../components/TweetList.js';
 import Avatar from '../components/Avatar';
 
+import fetchFollowUser from '../../redux/action-creators/followUser'
+
 class UserPageContainer extends React.Component {
 
   constructor(props) {
@@ -18,6 +20,8 @@ class UserPageContainer extends React.Component {
       tweets: null,
       error: null
     }
+
+    this.followUser = this.followUser.bind(this)
   }
 
   componentDidMount() {
@@ -49,21 +53,37 @@ class UserPageContainer extends React.Component {
     .catch(console.error);
   }
 
+  followUser() {
+
+    // If no one is logged in, prompt to sign up or login first
+    if (!store.getState().user.loggedInUser) {
+      window.alert('You must be logged in to follow other users')
+      return
+    }
+    fetchFollowUser(store.getState().user.loggedInUser.id,
+      this.props.params.username)
+  }
+
   render() {
 
     return (
       <div>
         {this.state.error && <h1>{this.state.error}</h1>}
-        {this.props.selectedUser && 
+        {this.props.selectedUser &&
 
         <div>
-           <div className='col-sm-5 text-center fade-in-slide-up-fast'> 
+           <div className='col-sm-5 text-center fade-in-slide-up-fast'>
             <h1>{`${this.props.selectedUser.username}'s profile`}</h1>
             <Avatar url='https://unsplash.it/250/250/?random'/>
             <br/><br/>
-            <button className='button-ternary border-primary'>Follow</button>
+            <button
+              className='button-ternary border-primary'
+              onClick={this.followUser}
+            >
+              Follow
+            </button>
           </div>
-          <div className='col-sm-4'>  
+          <div className='col-sm-4'>
             <TweetList
               tweets={this.state.tweets}
               header={`Tweets`}
