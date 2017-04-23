@@ -21,8 +21,8 @@ class UserPageContainer extends React.Component {
       tweets: null,
       error: null
     }
-
     this.followUser = this.followUser.bind(this)
+    this.unfollowUser = this.unfollowUser.bind(this)
   }
 
   componentDidMount() {
@@ -65,12 +65,38 @@ class UserPageContainer extends React.Component {
     }
 
     let userId = loggedInUser.id
-    console.log(userId)
     store.dispatch(fetchFollowUser(userId, this.props.params.username))
-    store.dispatch(fetchSubscriptions(userId))
+    .then(() => store.dispatch(fetchSubscriptions(userId)))
+    .catch(console.error)
   }
 
+  unfollowUser() {
+
+    let loggedInUser = store.getState().user.loggedInUser
+    let userId = loggedInUser.id
+  }
   render() {
+
+    let loggedInUser = this.props.loggedInUser
+    let subscriptions = this.props.subscriptions
+    let selectedUser = this.props.selectedUser
+    let displayFollow = true
+    let displayUnfollow = false
+
+    console.log(loggedInUser, subscriptions)
+    // If already following a user, set button to Unfollow
+    if (loggedInUser && subscriptions && selectedUser) {
+
+      for (let i = 0; i < subscriptions.length; i++) {
+        console.log('SUB NAME', subscriptions[i].username, 'SELECTED NAME', selectedUser.username)
+        if (subscriptions[i].username === selectedUser.username) {
+          displayFollow = false
+          displayUnfollow = true
+        }
+      }
+    }
+
+    console.log('UNFOLLOW DISPLAYING', displayUnfollow)
 
     return (
       <div>
@@ -81,13 +107,24 @@ class UserPageContainer extends React.Component {
            <div className='col-sm-5 text-center fade-in-slide-up-fast'>
             <h1>{`${this.props.selectedUser.username}'s profile`}</h1>
             <Avatar url='https://unsplash.it/250/250/?random'/>
-            <br/><br/>
-            <button
-              className='button-ternary border-primary'
-              onClick={this.followUser}
-            >
-              Follow
-            </button>
+            <br /><br />
+
+            {
+              displayFollow ?
+                <button
+                  className='button-ternary border-primary'
+                  onClick={this.followUser}
+                >
+                  Follow
+                </button>
+                :
+                <button
+                  className='button-ternary border-primary'
+                  onClick={this.unfollowUser}
+                >
+                  Unfollow
+                </button>
+            }
           </div>
           <div className='col-sm-4'>
             <TweetList

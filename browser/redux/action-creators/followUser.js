@@ -14,7 +14,7 @@ const updateUser = (updatedUser) => {
 
 const fetchFollowUser = (currentUserId, followedUsername) => {
   return (dispatch) => {
-    axios.put(`/api/users/${currentUserId}/follow/${followedUsername}`)
+    return axios.put(`/api/users/${currentUserId}/follow/${followedUsername}`)
       .then(res => res.data)
       .then(updatedUser => {
         dispatch(updateUser(updatedUser))

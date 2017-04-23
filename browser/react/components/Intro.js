@@ -7,17 +7,17 @@ const Intro = () => {
 
   return (
     <div>
-      
+
       <div>
         <h1>Twitter Clone</h1>
-        <img 
-          src='img/twitter-clone-logo.png' 
+        <img
+          src='img/twitter-clone-logo.png'
           className='fade-in-slide-up-faster'
-          style={{maxWidth: '50%'}} 
+          style={{maxWidth: '50%'}}
         />
       </div>
 
-      <div> 
+      <div>
         <UserForm />
         <br/>
       </div>

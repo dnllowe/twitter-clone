@@ -42,7 +42,6 @@ class UserForm extends React.Component {
       if (potentialError) {
         this.setState({ error: potentialError });
       } else {
-        console.log('ABOUT TO FETCH HIS SUBSCRIPTIONS', store.getState().user.loggedInUser)
         store.dispatch(fetchSubscriptions(store.getState().user.loggedInUser.id))
       }
     })
