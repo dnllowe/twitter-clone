@@ -9,9 +9,9 @@ export default {
   },
   ui: {
     navigationLinks: [
-      {text: 'Home', url: '/', callbacks: []}, 
-      {text: 'Tweets', url: '/', callbacks: []}, 
-      {text: 'Users', url: '/', callbacks: []}, 
+      {text: 'Home', url: '/', callbacks: []},
+      {text: 'Tweets', url: '/', callbacks: []},
+      {text: 'Users', url: '/', callbacks: []},
       {text: 'FAQ', url: '/', callbacks: []}
     ],
     prompt: 'What\'s on your mind?',
@@ -24,6 +24,8 @@ export default {
   user: {
     selectedUser: null,
     loggedInUser: null,
-    allUsers: null
+    allUsers: null,
+    subscriptions: null,
+    followers: null
   }
 }

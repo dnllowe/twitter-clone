@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import store from '../store';
-import actions from '../actions';
+import actions from '../actions'
 
 export const loginUser = (user) => {
   return {
@@ -29,7 +29,7 @@ const attemptLogin = () => {
     .then(verifiedUser => {
 
       // SHOULD DO SOMETHING AND RETURN IF LOGIN FAILED
-      if(verifiedUser.error) {return verifiedUser.error;}
+      if(verifiedUser.error) { return verifiedUser.error; }
       dispatch(loginUser(verifiedUser));
     });
   }

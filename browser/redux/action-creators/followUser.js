@@ -3,19 +3,22 @@
 import axios from 'axios';
 import actions from '../actions';
 
-const fetchFollowUser = (currentUserId, followedUsername) => {
+const updateUser = (updatedUser) => {
 
-  axios.put(`/api/users/${currentUserId}/follow/${followedUsername}`)
-    .then(res => res.data)
-    .then(updatedUser => {
-      followUser(updatedUser)
-    })
-}
-
-const followUser = (updatedUser) => {
+  console.log('UPDATED USER', updatedUser)
   return {
     type: actions.FOLLOW_USER,
     user: updatedUser
+  }
+}
+
+const fetchFollowUser = (currentUserId, followedUsername) => {
+  return (dispatch) => {
+    axios.put(`/api/users/${currentUserId}/follow/${followedUsername}`)
+      .then(res => res.data)
+      .then(updatedUser => {
+        dispatch(updateUser(updatedUser))
+      })
   }
 }
 

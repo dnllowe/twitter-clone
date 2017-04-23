@@ -17,7 +17,7 @@ class RelatedTweetsPageContainer extends React.Component {
     this.updateTweets();
   }
 
-  componentWillUpdate() {
+  componentWillReceiveProps(nextProps) {
     this.updateTweets();
   }
 
@@ -36,17 +36,17 @@ class RelatedTweetsPageContainer extends React.Component {
   render() {
     return (
       <div>
-        <div 
+        <div
         className='hidden-xs'
         style={ {
-          position: 'absolute', 
-          top: '35%', 
-          right: '80%', 
+          position: 'absolute',
+          top: '35%',
+          right: '80%',
           transform: 'translateX(50%)'} }>
           <h1 className='fade-in-slide-up-med' style={ {fontSize: '4.25em'} }>{`#${this.props.params.hashTag}`}</h1>
         </div>
         <div className='col-sm-offset-5 col-sm-4 col-xs-12'>
-          <TweetList 
+          <TweetList
             tweets={this.state.tweets}
             header={`#${this.props.params.hashTag}`}
           />

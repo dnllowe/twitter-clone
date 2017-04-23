@@ -10,7 +10,6 @@ const defaultState = {
 
 export default (prevState = defaultState, action) => {
 
-  console.log(store);
   let newState = Object.assign({}, prevState);
 
   switch(action.type) {
@@ -36,6 +35,9 @@ export default (prevState = defaultState, action) => {
     case actions.UNFOLLOW_USER:
       newState.loggedInUser = action.user;
       break;
+    case actions.SET_SUBSCRIPTIONS:
+      newState.subscriptions = action.subscriptions
+      break
     default:
       return prevState;
   }

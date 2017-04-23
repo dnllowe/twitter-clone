@@ -159,8 +159,8 @@ router.put('/:userId/follow/:followedUsername', (req, res) => {
     user.addSubscription(followId)
     followedUser.addFollower(req.params.userId)
     updatedUser = user
-    res.status(204)
-    res.json(updatedUser)
+    console.log('ABOUT TO SEND...', updatedUser)
+    res.json(updatedUser).status(204)
   })
   .catch(console.error)
 })
@@ -188,8 +188,7 @@ router.put('/:userId/unfollow/:followedUsername', (req, res) => {
     user.removeSubscription(followId)
     updatedUser = user
     followedUser.removeFollower(req.params.userId)
-    res.status(204)
-    res.json(updatedUser)
+    res.json(updatedUser).status(204)
   })
   .catch(console.error)
 })

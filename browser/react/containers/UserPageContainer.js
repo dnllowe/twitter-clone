@@ -9,6 +9,7 @@ import TweetList from '../components/TweetList.js';
 import Avatar from '../components/Avatar';
 
 import fetchFollowUser from '../../redux/action-creators/followUser'
+import fetchSubscriptions from '../../redux/action-creators/setSubscriptions'
 
 class UserPageContainer extends React.Component {
 
@@ -55,13 +56,18 @@ class UserPageContainer extends React.Component {
 
   followUser() {
 
+    let loggedInUser = store.getState().user.loggedInUser
+
     // If no one is logged in, prompt to sign up or login first
-    if (!store.getState().user.loggedInUser) {
+    if (!loggedInUser) {
       window.alert('You must be logged in to follow other users')
       return
     }
-    fetchFollowUser(store.getState().user.loggedInUser.id,
-      this.props.params.username)
+
+    let userId = loggedInUser.id
+    console.log(userId)
+    store.dispatch(fetchFollowUser(userId, this.props.params.username))
+    store.dispatch(fetchSubscriptions(userId))
   }
 
   render() {
