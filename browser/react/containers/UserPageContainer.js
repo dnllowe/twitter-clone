@@ -83,20 +83,19 @@ class UserPageContainer extends React.Component {
     let displayFollow = true
     let displayUnfollow = false
 
-    console.log(loggedInUser, subscriptions)
-    // If already following a user, set button to Unfollow
-    if (loggedInUser && subscriptions && selectedUser) {
+    // A user can't follow themselves
+    if (loggedInUser && selectedUser && loggedInUser.username === selectedUser.username) {
+      displayFollow = false
+      // If already following a user, set button to Unfollow
+    } else if (loggedInUser && subscriptions && selectedUser) {
 
       for (let i = 0; i < subscriptions.length; i++) {
-        console.log('SUB NAME', subscriptions[i].username, 'SELECTED NAME', selectedUser.username)
         if (subscriptions[i].username === selectedUser.username) {
           displayFollow = false
           displayUnfollow = true
         }
       }
     }
-
-    console.log('UNFOLLOW DISPLAYING', displayUnfollow)
 
     return (
       <div>
@@ -109,15 +108,19 @@ class UserPageContainer extends React.Component {
             <Avatar url='https://unsplash.it/250/250/?random'/>
             <br /><br />
 
+            {/*FOLLOW BUTTON*/}
             {
-              displayFollow ?
-                <button
-                  className='button-ternary border-primary'
-                  onClick={this.followUser}
-                >
-                  Follow
+              displayFollow &&
+              <button
+                className='button-ternary border-primary'
+                onClick={this.followUser}
+              >
+                Follow
                 </button>
-                :
+            }
+
+            {/*UNFOLLOW BUTTON*/}
+            { displayUnfollow &&
                 <button
                   className='button-ternary border-primary'
                   onClick={this.unfollowUser}

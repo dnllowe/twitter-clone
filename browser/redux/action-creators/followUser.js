@@ -5,7 +5,6 @@ import actions from '../actions';
 
 const updateUser = (updatedUser) => {
 
-  console.log('UPDATED USER', updatedUser)
   return {
     type: actions.FOLLOW_USER,
     user: updatedUser

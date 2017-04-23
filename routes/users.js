@@ -159,7 +159,6 @@ router.put('/:userId/follow/:followedUsername', (req, res) => {
     user.addSubscription(followId)
     followedUser.addFollower(req.params.userId)
     updatedUser = user
-    console.log('ABOUT TO SEND...', updatedUser)
     res.json(updatedUser).status(204)
   })
   .catch(console.error)
