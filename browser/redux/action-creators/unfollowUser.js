@@ -3,21 +3,21 @@
 import axios from 'axios';
 import actions from '../actions';
 
-const followUser = (updatedUser) => {
+const unfollowUser = (updatedUser) => {
   return {
     type: actions.UNFOLLOW_USER,
     user: updatedUser
   }
 }
 
-const fetchFollowUser = (currentUserId, followedUsername) => {
+const fetchUnfollowUser = (currentUserId, followedUsername) => {
   return (dispatch) => {
-    axios.put(`/api/users/${currentUserId}/unfollow/${followedUsername}`)
+    return axios.put(`/api/users/${currentUserId}/unfollow/${followedUsername}`)
       .then(res => res.data)
       .then(updatedUser => {
-        dispatch(followUser(updatedUser))
+        dispatch(unfollowUser(updatedUser))
       })
     }
 }
 
-export default followUser
+export default fetchUnfollowUser

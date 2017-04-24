@@ -10,6 +10,7 @@ import Avatar from '../components/Avatar';
 
 import fetchFollowUser from '../../redux/action-creators/followUser'
 import fetchSubscriptions from '../../redux/action-creators/setSubscriptions'
+import fetchUnfollowUser from '../../redux/action-creators/unfollowUser'
 
 class UserPageContainer extends React.Component {
 
@@ -74,7 +75,11 @@ class UserPageContainer extends React.Component {
 
     let loggedInUser = store.getState().user.loggedInUser
     let userId = loggedInUser.id
+    store.dispatch(fetchUnfollowUser(userId, this.props.params.username))
+    .then(() => store.dispatch(fetchSubscriptions(userId)))
+    .catch(console.error)
   }
+
   render() {
 
     let loggedInUser = this.props.loggedInUser
