@@ -10,13 +10,12 @@ const defaultState = {
 
 export default (prevState = defaultState, action) => {
 
-  console.log(store);  
   let newState = Object.assign({}, prevState);
-  
+
   switch(action.type) {
 
     case actions.CREATE_USER:
-      newState.loggedInUser = action.user;   
+      newState.loggedInUser = action.user;
       break;
     case actions.SELECT_USER:
       newState.selectedUser = action.selectedUser;
@@ -30,6 +29,18 @@ export default (prevState = defaultState, action) => {
     case actions.LOGOUT_USER:
       newState.loggedInUser = null;
       break;
+    case actions.FOLLOW_USER:
+      newState.loggedInUser = action.user;
+      break;
+    case actions.UNFOLLOW_USER:
+      newState.loggedInUser = action.user;
+      break;
+    case actions.SET_SUBSCRIPTIONS:
+      newState.subscriptions = action.subscriptions
+      break
+    case actions.SET_FOLLOWERS:
+      newState.followers = action.followers
+      break
     default:
       return prevState;
   }

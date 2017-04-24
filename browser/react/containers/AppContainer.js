@@ -56,7 +56,7 @@ class AppContainer extends React.Component {
   }
 
   render() {
-    
+
     // PREPARATION FOR DYNAMIC LOGOUT BUTTON
     const user = this.state.user.loggedInUser;
     const loggedIn = user !== null ? true : false;
@@ -79,23 +79,25 @@ class AppContainer extends React.Component {
         </div>
 
         <div className='hidden-sm hidden-md hidden-lg'>
-          <HamburgerMenuContainer 
+          <HamburgerMenuContainer
             links={hamburgerMenuLinks}
             loggedIn={loggedIn}/>
         </div>
 
-        {this.props.children && 
+        {this.props.children &&
          cloneElement(this.props.children, {
            currentTweets: this.state.tweets.currentTweets,
            currentHashtags: this.state.tweets.currentHashtags,
            prompt: this.state.ui.prompt,
            selectedTweet: this.state.tweets.selectedTweet,
            selectedUser: this.state.user.selectedUser,
+           subscriptions: this.state.user.subscriptions,
+           followers: this.state.user.followers,
            loggedInUser: this.state.user.loggedInUser,
            navigationLinks: this.state.ui.navigationLinks,
            isSignupDisplaying: this.state.ui.isSignupDisplaying})
-        } 
-         
+        }
+
       </div>
     );
   }

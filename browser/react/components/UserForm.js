@@ -6,7 +6,9 @@ import store from '../../redux/store';
 import displaySignup from '../../redux/action-creators/displaySignup';
 import updatePassword from '../../redux/action-creators/updatePasswordInput';
 import updateUsername from '../../redux/action-creators/updateUsernameInput';
-import login from'../../redux/action-creators/loginUser';
+import login from '../../redux/action-creators/loginUser';
+import fetchSubscriptions from '../../redux/action-creators/setSubscriptions'
+import fetchFollowers from '../../redux/action-creators/setFollowers'
 
 class UserForm extends React.Component {
 
@@ -15,7 +17,7 @@ class UserForm extends React.Component {
 
     this.state = store.getState().input;
     this.state.error = null;
-    
+
     this.handleSignup = this.handleSignup.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleUsernameInput = this.handleUsernameInput.bind(this);
@@ -31,22 +33,25 @@ class UserForm extends React.Component {
   }
 
   handleLogin(event) {
-    event.preventDefault(); 
+    event.preventDefault();
     store.dispatch(updatePassword(this.state.password));
     store.dispatch(updateUsername(this.state.username));
-    
+
     // Check for any potential errors returned from the promise
     store.dispatch(login())
     .then(potentialError => {
-      if(potentialError) {
-        this.setState({error: potentialError});
+      if (potentialError) {
+        this.setState({ error: potentialError });
+      } else {
+        store.dispatch(fetchSubscriptions(store.getState().user.loggedInUser.id))
+        store.dispatch(fetchFollowers(store.getState().user.loggedInUser.id))
       }
     })
-    .catch(console.error);
+      .catch(console.error);
   }
 
   handleSignup(event) {
-    event.preventDefault(); 
+    event.preventDefault();
     store.dispatch(updatePassword(this.state.password));
     store.dispatch(updateUsername(this.state.username));
     store.dispatch(displaySignup(true));
@@ -57,7 +62,7 @@ class UserForm extends React.Component {
       <form onChange={() => {this.setState({error: null})}}>
 
         {/*ERROR MESSAGE IF LOGIN FAILED*/}
-        {this.state.error && 
+        {this.state.error &&
         (<div className='text-error'>
           {this.state.error}
           <br/><br/>
@@ -65,19 +70,19 @@ class UserForm extends React.Component {
         )}
 
         {/*USERNAME INPUT*/}
-        <input 
+        <input
           className='input-field margin-bottom-small'
-          type='text' 
+          type='text'
           placeholder='Username'
-          value={this.state.username} 
+          value={this.state.username}
           onChange={this.handleUsernameInput}
         />
         <br/>
 
         {/*PASSWORD INPUT*/}
-        <input 
-          className='input-field margin-bottom-small' 
-          type='password' 
+        <input
+          className='input-field margin-bottom-small'
+          type='password'
           placeholder='Password'
           value={this.state.password}
           onChange={this.handlePasswordInput}
@@ -85,15 +90,15 @@ class UserForm extends React.Component {
         <br/><br/>
 
         {/*LOGIN BUTTON*/}
-        <button 
+        <button
           className='button-primary margin-right-smallest margin-bottom-smaller'
           onClick={this.handleLogin}>
           LOGIN
         </button>
 
         {/*SIGN UP BUTTON*/}
-        <button 
-          className='button-primary' 
+        <button
+          className='button-primary'
           onClick={this.handleSignup}>
           SIGN UP
         </button>

@@ -108,11 +108,11 @@ class HomePage extends React.Component {
     return (
       <div>
         <div className='row'>
-          
+
           <div className='col-sm-4 col-xs-12 text-center'>
-            
+
             {/* SIGNED IN */}
-            {this.props.loggedInUser && 
+            {this.props.loggedInUser &&
               (
                 <div className='fade-in-slide-up-fast'>
                   <h1>Hello, {this.props.loggedInUser.firstname}</h1>
@@ -123,10 +123,10 @@ class HomePage extends React.Component {
               )
             }
 
-              
+
             {/*NOT SIGNED IN*/}
             {!this.props.loggedInUser &&
-             !this.props.isSignupDisplaying && 
+             !this.props.isSignupDisplaying &&
              <Intro />
             }
 
@@ -138,7 +138,7 @@ class HomePage extends React.Component {
 
             <TweetField prompt={this.props.prompt}/>
           </div>
-          
+
           <div className='col-sm-4 col-xs-12'>
             {this.state.tweets.length ?
             <TweetList
@@ -156,7 +156,7 @@ class HomePage extends React.Component {
               </div>
             )
             }
-            
+
           </div>
 
           <div className='col-sm-4 hidden-xs'>
