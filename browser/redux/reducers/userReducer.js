@@ -38,6 +38,9 @@ export default (prevState = defaultState, action) => {
     case actions.SET_SUBSCRIPTIONS:
       newState.subscriptions = action.subscriptions
       break
+    case actions.SET_FOLLOWERS:
+      newState.followers = action.followers
+      break
     default:
       return prevState;
   }

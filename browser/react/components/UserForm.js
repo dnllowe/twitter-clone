@@ -8,6 +8,7 @@ import updatePassword from '../../redux/action-creators/updatePasswordInput';
 import updateUsername from '../../redux/action-creators/updateUsernameInput';
 import login from '../../redux/action-creators/loginUser';
 import fetchSubscriptions from '../../redux/action-creators/setSubscriptions'
+import fetchFollowers from '../../redux/action-creators/setFollowers'
 
 class UserForm extends React.Component {
 
@@ -43,6 +44,7 @@ class UserForm extends React.Component {
         this.setState({ error: potentialError });
       } else {
         store.dispatch(fetchSubscriptions(store.getState().user.loggedInUser.id))
+        store.dispatch(fetchFollowers(store.getState().user.loggedInUser.id))
       }
     })
       .catch(console.error);
