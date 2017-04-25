@@ -5,8 +5,6 @@ const db = require('./models');
 const User = db.User;
 const Tweet = db.Tweet;
 
-console.log(User);
-
 const usersSeed = [
     {username: 'fakeUser', password: 'password', firstname: 'Fake', lastname: 'User', subscriptionId: 2},
     {username: 'testUser', password: 'password', firstname: 'Smarter', lastname: 'Child'},
@@ -56,8 +54,9 @@ const tweetsSeed = [
 
 db.db.sync({force: true})
 .then(() => {
-    console.log('Fininshed syncing datbase", "Old data removed');
-    return User.bulkCreate(usersSeed);
+    console.log('Fininshed syncing datbase', 'Old data removed');
+    const promises = usersSeed.map(user => User.create(user))
+    return Promise.all(promises)
 })
 .then(() => {
     console.log('Created new Users data');

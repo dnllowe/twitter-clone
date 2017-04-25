@@ -38,16 +38,23 @@ router.get('/info/:username', (req, res) => {
 router.post('/login', (req, res) => {
   const username = req.body.username
   const password = req.body.password
+  let user = null
 
   User.findOne({
-    where: {username, password}
+    where: { username }
   })
-  .then(user => {
-    if (user) {
+  .then(foundUser => {
+    user = foundUser;
+    if (user) { return user.checkPassword(password) }
+  })
+  .then(isPasswordValid => {
+    // Could be null (if no user found) or false
+    if (isPasswordValid) {
       req.session.userId = user.id
       res.json(user)
+    } else {
+      res.json({ error: 'LOGIN FAILED' })
     }
-    else { res.json({ error: 'LOGIN FAILED' }) }
   })
   .catch(console.error)
 })
