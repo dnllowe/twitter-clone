@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import store from '../../redux/store';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 class FilteredSearchBar extends React.Component {
 
@@ -12,12 +12,25 @@ class FilteredSearchBar extends React.Component {
     }
 
     this.handleInput = this.handleInput.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleEnter = this.handleEnter.bind(this)
   }
 
   handleInput(event) {
     this.setState({
      [event.target.name]: event.target.value
     })
+  }
+
+  handleEnter(event) {
+    if (this.state.searchInput[0] === '#' && event.keyCode === 13) {
+      this.handleSubmit(event)
+    }
+  }
+
+  handleSubmit(event) {
+    const searchInput = this.state.searchInput.slice(1, this.state.searchInput.length)
+    browserHistory.push(`/tweets/related/${searchInput}`)
   }
 
   render() {
@@ -37,7 +50,8 @@ class FilteredSearchBar extends React.Component {
           style={{ width: '75%' }}
           placeholder={this.props.placeholder}
           name='searchInput'
-          onChange={ this.handleInput}
+          onChange={ this.handleInput }
+          onKeyDown={ this.handleEnter }
         />
         <br />
         <ul className='no-bullets'>
@@ -51,6 +65,16 @@ class FilteredSearchBar extends React.Component {
             })
           }
         </ul>
+        {
+          this.state.searchInput[0] === '#' &&
+            <button
+              className='button-primary'
+              style={ {display: false } }
+              onClick={this.handleSubmit}
+            >
+              Search #s
+            </button>
+        }
       </div>
     );
   }

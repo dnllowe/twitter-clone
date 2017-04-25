@@ -17,7 +17,7 @@ class FilteredSearchContainer extends React.Component {
     this.unsubscribe = store.subscribe(() => {
       this.setState({ allUsers: store.getState().user.allUsers });
     });
-  }  
+  }
 
   componentWillUnmount() {
     this.unsubscribe();
@@ -26,7 +26,7 @@ class FilteredSearchContainer extends React.Component {
   render() {
     return <FilteredSearchBar
       items={this.state.allUsers}
-      placeholder="Look for people to follow by username or hashtags"
+      placeholder="Search for usernames or hashtags"
     />
   }
 }
