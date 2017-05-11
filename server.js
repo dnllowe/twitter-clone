@@ -30,7 +30,6 @@ if (process.env.NODE_ENV !== 'test') {
 
     // Save session as a global variable in memory
     let session = {}
-    session.userId = null
     app.use('/', (req, res, next) => {
         req.session = session
         next()
