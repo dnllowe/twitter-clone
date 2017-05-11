@@ -161,7 +161,6 @@ router.post('/', (req, res) => {
 
   // If no user is logged in, we will create a random one
   if (!req.session.userId) {
-
     const charLength = Math.floor(Math.random() * 10) + 5;
     let randomName = '';
 
@@ -176,7 +175,7 @@ router.post('/', (req, res) => {
       lastname: 'Tweet',
       username: randomName,
       password: 'password'
-    });
+    })
   } else {
     promise = User.findById(req.session.userId);
   }

@@ -51,9 +51,9 @@ router.post('/login', (req, res) => {
     // Could be null (if no user found) or false
     if (isPasswordValid) {
       req.session.userId = user.id
-      res.json(user)
+      res.status(201).json(user)
     } else {
-      res.json({ error: 'LOGIN FAILED' })
+      res.status(401).json({ error: 'LOGIN FAILED' })
     }
   })
   .catch(console.error)
