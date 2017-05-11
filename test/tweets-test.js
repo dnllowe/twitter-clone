@@ -1,6 +1,6 @@
 'use strict'
 
-const app = require('../server')
+const app = require('../server').app
 const req = require('supertest')(app)
 const expect = require('chai').expect
 const { db, User, Tweet } = require('../models')
@@ -23,8 +23,26 @@ describe('Starting Supertest Server', () => {
 
 describe('/api/tweets', () => {
 
+  // Deleted and created new before each test
+  let testUser = null
+
+  // Create a test user, cache user, and log them out
   beforeEach(() => {
     return db.sync({ force: true })
+      .then(() => {
+      return req.post('/api/users')
+        .send({
+          firstname: 'Test',
+          lastname: 'User',
+          username: 'test_user',
+          password: '123'
+        })
+        .expect(201)
+        .then(newUser => {
+          testUser = newUser.body
+          return req.delete('/api/users/logout')
+        })
+    })
       .catch(console.error)
   })
 
@@ -74,17 +92,35 @@ describe('/api/tweets', () => {
 
   describe('POST /', () => {
 
-    it('Should create a new tweet and a new user for the tweet (since no user is logged in)', () => {
+    it('Should create a new tweet and a new user for the tweet if no user is logged in)', () => {
+
       return req.post('/api/tweets')
-        .send({
-          tweet: '1. Test Tweet #test #tweet',
-        })
+        .send({ tweet: '1. Test Tweet #test #tweet' })
         .expect(201)
         .then(res => {
-          expect(res.body.content).to.equal('1. Test Tweet #test #tweet')
-          expect(res.body.user).to.not.equal(null)
-          expect(res.body.user.fullname).to.equal('Anonymous Tweet')
-          expect(res.body.hashTags).to.eql(['#test', '#tweet'])
+          const tweet = res.body
+          expect(tweet.content).to.equal('1. Test Tweet #test #tweet')
+          expect(tweet.user).to.not.equal(null)
+          expect(tweet.user.fullname).to.equal('Anonymous Tweet')
+          expect(tweet.hashTags).to.eql(['#test', '#tweet'])
+        })
+    })
+
+    it('Should associate a new tweet with the currently logged in user', () => {
+      return req.post('/api/users/login')
+        .send(testUser)
+        .expect(201)
+        .then(() => {
+          return req.post('/api/tweets')
+            .send({ tweet: '2. Test Tweet With User #logged #in' })
+            .expect(201)
+        })
+        .then(res => {
+          const tweet = res.body
+          expect(tweet.content).to.equal('2. Test Tweet With User #logged #in')
+          expect(tweet.user).to.not.equal(null)
+          expect(tweet.user.fullname).to.equal('Test User')
+          expect(tweet.hashTags).to.eql(['#logged', '#in'])
         })
     })
   })
