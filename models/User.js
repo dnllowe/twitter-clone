@@ -47,7 +47,6 @@ const User = db.define('user', {
 
         // NOTE: this returns a promise. Must check for validity in .then statement
         checkPassword: function (password) {
-            console.log(this, password)
             return bcrypt.compare(password, this.password_hash)
         }
     }
