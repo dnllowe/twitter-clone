@@ -6,14 +6,16 @@ const path = require('path');
 const PORT = 3000;
 const router = require('./routes');
 const bodyParser = require('body-parser');
-const db = require('./models');
+const { db } = require('./models');
 const morgan = require('morgan');
 const session = require('express-session');
 
 // MIDDLEWARE
 
-// Logging
-app.use(morgan('dev'));
+// Logging (only in dev mode)
+if (process.env.NODE_ENV === 'dev') {
+    app.use(morgan('dev'));
+}
 
 // Sessions
 app.use(session({
@@ -23,10 +25,10 @@ app.use(session({
 }));
 
 // Needed to parse POST requests from HTML forms
-app.use(bodyParser.urlencoded({extended: true})); 
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Needed to parse POST requests from AJAX requests
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 
 app.use('/api', router);
 app.use(express.static(__dirname + '/public'));
@@ -43,11 +45,15 @@ app.use(function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+// Only start server if main module
+if (module === require.main) {
+    db.sync()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log("Listening on port: " + PORT);
+        });
+    })
+    .catch(console.err);
+}
 
-db.db.sync()
-.then(() => {
-    app.listen(PORT, () => {
-        console.log("Listening on port: " + PORT);
-    });
-})
-.catch(console.err);
+module.exports = app

@@ -1,9 +1,7 @@
 'use strict'
 
 const Promise = require('bluebird');
-const db = require('./models');
-const User = db.User;
-const Tweet = db.Tweet;
+const { db, User, Tweet } = require('./models')
 
 const usersSeed = [
     {username: 'fakeUser', password: 'password', firstname: 'Fake', lastname: 'User', subscriptionId: 2},
@@ -52,7 +50,7 @@ const tweetsSeed = [
 
 ];
 
-db.db.sync({force: true})
+db.sync({force: true})
 .then(() => {
     console.log('Fininshed syncing datbase', 'Old data removed');
     const promises = usersSeed.map(user => User.create(user))
