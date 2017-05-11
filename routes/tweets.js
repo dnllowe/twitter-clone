@@ -165,7 +165,7 @@ router.post('/', (req, res) => {
     const charLength = Math.floor(Math.random() * 10) + 5;
     let randomName = '';
 
-    for (let iii = 0; iii < charLength; iii++) {  
+    for (let iii = 0; iii < charLength; iii++) {
       const randomChar = String.fromCharCode(Math.floor(Math.random() * 57) + 65);
       randomName += randomChar;
     }
@@ -199,7 +199,7 @@ router.post('/', (req, res) => {
     });
   })
   .then(newTweetWithUser => {
-    res.json(newTweetWithUser);
+    res.status(201).json(newTweetWithUser)
   })
   .catch(console.error);
 });
@@ -219,14 +219,14 @@ router.get('/hashtags', (req, res) => {
       hashTags: {
         $not: []
       }
-    }  
+    }
   })
   .then(tweets => {
     // Use array to sort hashtags based on frequency
     let uniqueHashtags = [];
 
     tweets.forEach((tweet) => {
-      tweet.hashTags.forEach((hashTag) => {    
+      tweet.hashTags.forEach((hashTag) => {
         const index = uniqueHashtags.findIndex((element) => {
           return element.hashTag === hashTag;
         });
@@ -274,8 +274,8 @@ router.get('/hashtags/popular/:time/:limit', (req, res) => {
 
         if (index === -1) {
           uniqueHashtags.push({hashTag, frequency: 1});
-        } else {        
-          uniqueHashtags[index].frequency++;     
+        } else {
+          uniqueHashtags[index].frequency++;
         }
       });
     });
