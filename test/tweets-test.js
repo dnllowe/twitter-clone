@@ -34,6 +34,29 @@ describe('/api/tweets', () => {
       return req.get('/api/tweets/all')
         .expect([])
     })
+
+    it('Should return an array of tweets that exist', () => {
+      return req.post('/api/tweets')
+        .send({ tweet: "Here's a test tweet. #one" })
+        .expect(201)
+        .then(() => {
+          return req.post('/api/tweets')
+            .send({ tweet: "Another test tweet. #two #again" })
+            .expect(201)
+        })
+        .then(() => {
+          return req.post('/api/tweets')
+            .send({ tweet: "Final test tweet. #three #last" })
+            .expect(201)
+        })
+        .then(() => {
+          return req.get('/api/tweets/all')
+            .expect(200)
+            .then(res => {
+              expect(res.body.length).to.equal(3)
+            })
+        })
+    })
   })
 
   describe('POST /', () => {
