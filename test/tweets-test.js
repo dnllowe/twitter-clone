@@ -30,6 +30,9 @@ describe('/api/tweets', () => {
 
   describe('GET /all', () => {
 
+    // Use to store tweets in subsequent calls / tests
+    let tweets = null
+
     it('Should return an empty array, as there are no tweets, yet', () => {
       return req.get('/api/tweets/all')
         .expect([])
@@ -53,9 +56,19 @@ describe('/api/tweets', () => {
           return req.get('/api/tweets/all')
             .expect(200)
             .then(res => {
-              expect(res.body.length).to.equal(3)
+              tweets = res.body
+              expect(tweets.length).to.equal(3)
             })
         })
+    })
+
+    it('Should return tweets in order of most recently created', () => {
+      expect(tweets[2].content).to.equal("Here's a test tweet. #one")
+      expect(tweets[2].hashTags).to.eql(['#one'])
+      expect(tweets[1].content).to.equal("Another test tweet. #two #again")
+      expect(tweets[1].hashTags).to.eql(['#two', '#again'])
+      expect(tweets[0].content).to.equal("Final test tweet. #three #last")
+      expect(tweets[0].hashTags).to.eql(['#three', '#last'])
     })
   })
 
